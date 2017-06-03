@@ -1,0 +1,11 @@
+purchase_type: on_demand
+subnet_id: subnet-7387595f
+price: 0.13
+num_instances: 3
+key_name: kyle-schmidt
+security_group_ids: sg-2aeadb54
+instance_type: m4.large
+tag_name: spark-cluster
+vol_size: 100
+role: worker
+use_eips: true
