@@ -5,11 +5,12 @@
    - ID
    - Name
    - Full Name
-
-2. Followers
-   - Follower ID
-   - Name
-   - Full Name
+   - Created Time
+   - Followers
+     - Follower ID
+     - Name
+     - Full Name
+     - Created Time
 
 3. Photo Event
    - User
@@ -30,9 +31,31 @@
        - ID
        - Name
        - Full Name
+   - Photo
+       - ID
+       - Tags
+       - Link
+       - Created Time
+       - Location
+       - User
+           - ID
+           - Name
+           - Full Name
 
 5. Like Event
    - User
        - ID
        - Name
        - Full Name
+   - Created Time
+   - ID
+   - Photo
+     - ID
+     - Tags
+     - Link
+     - Created Time
+     - Location
+     - User
+         - ID
+         - Name
+         - Full Name

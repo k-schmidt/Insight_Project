@@ -3,7 +3,7 @@ subnet_id: subnet-759aee10
 num_instances: 1
 key_name: k-schmidt
 security_group_ids: sg-3eb8b940
-instance_type: m4.large
+instance_type: t2.large
 tag_name: spark-cluster
 vol_size: 100
 role: master
