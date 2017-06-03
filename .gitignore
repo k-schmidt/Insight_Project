@@ -3,3 +3,5 @@
 *.tfstate
 *.tfstate.backup
 *config_secure.py
+*__pycache__
+*.mypy_cache
