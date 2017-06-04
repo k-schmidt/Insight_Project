@@ -91,14 +91,14 @@ def main(user_file: str = "users.csv",
     Main method
     """
     path_users = os.path.join(download_dir, user_file)
-    # with open(path_users, 'w') as user_csv:
-    #     writer = csv.writer(user_csv)
-    #     for username, full_name in gen_fake_users(num_fakes):
-    #         record = (username,
-    #                   full_name,
-    #                   datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-    #                   datetime.now().strftime("%Y-%m-%d"))
-    #         writer.writerow(record)
+    with open(path_users, 'w') as user_csv:
+        writer = csv.writer(user_csv)
+        for username, full_name in gen_fake_users(num_fakes):
+            record = (username,
+                      full_name,
+                      datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                      datetime.now().strftime("%Y-%m-%d"))
+            writer.writerow(record)
 
     transfer_file_s3(s3_tablename,
                      path_users,
