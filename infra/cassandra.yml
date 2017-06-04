@@ -1,10 +1,10 @@
 purchase_type: on_demand
 subnet_id: subnet-759aee10
 price: 0.13
-num_instances: 5
+num_instances: 4
 key_name: k-schmidt
 security_group_ids: sg-3eb8b940
-instance_type: c4.4xlarge
+instance_type: i2.2xlarge
 tag_name: cassandra-cluster
 vol_size: 100
 role: worker
