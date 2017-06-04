@@ -4,34 +4,15 @@ Kyle Schmidt
 
 Main method to generate user data
 """
-import random
+import csv
+from datetime import datetime
+import os
 import re
-from typing import Generator
+from typing import Generator, Tuple
 
 from faker import Faker  # type: ignore
-import sqlalchemy  # type: ignore
-from sqlalchemy import create_engine
-from sqlalchemy.orm.session import Session  # type: ignore
 
-from pkg import models
-from config_secure import MYSQL_ENGINE
-
-
-def mysql_connection(mysql_engine: str) -> Session:
-    """
-    Create MySQL Connection
-
-    Arguments:
-        mysql_engine: URI of mysql database
-
-    Returns:
-        mysql session
-    """
-    engine = create_engine(mysql_engine)
-    models.ModelBase.metadata.create_all(engine)
-    SessionMaker = sqlalchemy.orm.sessionmaker(bind=engine)  # pylint: disable=invalid-name
-    session = SessionMaker()
-    return session
+from config import PATH_INSTANCE, s3_client
 
 
 def remove_non_alpha_chars(string: str) -> str:
@@ -48,7 +29,7 @@ def remove_non_alpha_chars(string: str) -> str:
     return regex.sub('', string)
 
 
-def gen_fake_users(num_fakes: int) -> Generator[models.User, None, None]:
+def gen_fake_users(num_fakes: int) -> Generator[Tuple[str, str], None, None]:
     """
     Generate Fake Users
 
@@ -58,30 +39,70 @@ def gen_fake_users(num_fakes: int) -> Generator[models.User, None, None]:
     fake = Faker()
     for _ in range(num_fakes):
         full_name = fake.name()  # pylint: disable=no-member
-        name = remove_non_alpha_chars(full_name)
-        user = models.User(name=name, full_name=full_name)
-        yield user
+        name = remove_non_alpha_chars(full_name).lower()
+        yield name, full_name
 
 
-def main(mysql_engine: str = MYSQL_ENGINE,
-         num_fakes: int = 1000000,
-         max_followers: int = 1000):
+def create_s3_key(tablename: str,
+                  local_filename: str) -> str:
+    """
+    Create the S3 Key Name
+
+    Arguments:
+        tablename: Name of table in S3
+        local_filename: Path to local file
+        date_today: String representation of today's date
+
+    Returns:
+        String formatted S3 Key
+    """
+    date_today = datetime.now().strftime("%Y-%m-%d")
+    file_basename = os.path.basename(local_filename)
+    return os.path.join(tablename, date_today, file_basename)
+
+
+def transfer_file_s3(tablename: str,
+                     local_filepath: str,
+                     bucket: str) -> None:
+    """
+    Method to Upload File to AWS S3
+
+    Arguments:
+        tablename: Name of table in S3
+        local_filepath: Path to local file
+        bucket: Name of S3 bucket
+
+    Returns:
+        None
+    """
+    s3_key = create_s3_key(tablename,
+                           local_filepath)
+    s3_client.meta.client.upload_file(local_filepath,
+                                      bucket,
+                                      s3_key)
+
+
+def main(user_file: str = "users.csv",
+         s3_tablename: str = "users",
+         bucket: str = "insight-hdfs",
+         num_fakes: int = 5000000,
+         download_dir: str = PATH_INSTANCE):
     """
     Main method
     """
-    session = mysql_connection(mysql_engine)
-    for user in gen_fake_users(num_fakes):
-        session.add(user)
-    session.commit()
+    path_users = os.path.join(download_dir, user_file)
+    # with open(path_users, 'w') as user_csv:
+    #     writer = csv.writer(user_csv)
+    #     for username, full_name in gen_fake_users(num_fakes):
+    #         record = (username,
+    #                   full_name,
+    #                   datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    #                   datetime.now().strftime("%Y-%m-%d"))
+    #         writer.writerow(record)
 
-    for user in session.query(models.User).all():
-        for _ in range(random.randrange(max_followers)):
-            follower = session.query(models.User)\
-                              .filter(models.User.id == random.randrange(1, num_fakes+1)).first()
-            if follower != user:
-                user.followers.append(follower)
-        session.add(user)
-    session.commit()
+    transfer_file_s3(s3_tablename,
+                     path_users,
+                     bucket)
 
 if __name__ == '__main__':
     main()
