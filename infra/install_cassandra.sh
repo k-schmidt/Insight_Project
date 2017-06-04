@@ -2,8 +2,6 @@
 # Script to install Apache Cassandra
 ###############################################################################
 
-cd $USER
-sudo apt do-release-upgrade
 sudo add-apt-repository ppa:webupd8team/java
 sudo apt update
 sudo apt upgrade
