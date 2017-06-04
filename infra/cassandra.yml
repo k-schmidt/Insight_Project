@@ -4,7 +4,7 @@ price: 0.13
 num_instances: 5
 key_name: k-schmidt
 security_group_ids: sg-3eb8b940
-instance_type: m4.xlarge
+instance_type: c4.4xlarge
 tag_name: cassandra-cluster
 vol_size: 100
 role: worker

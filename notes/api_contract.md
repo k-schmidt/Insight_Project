@@ -12,7 +12,7 @@
      - Full Name
      - Created Time
 
-3. Photo Event
+2. Photo Event
    - User
        - ID
        - Name
@@ -23,7 +23,7 @@
    - Created Time
    - Location
 
-4. Comment Event
+3. Comment Event
    - Created Time
    - Text
    - ID
@@ -42,7 +42,7 @@
            - Name
            - Full Name
 
-5. Like Event
+4. Like Event
    - User
        - ID
        - Name
@@ -59,3 +59,27 @@
          - ID
          - Name
          - Full Name
+
+5. Follow Event
+   - ID
+   - Created Time
+   - User
+       - ID
+       - Name
+       - Full Name
+   - Followee
+       - ID
+       - Name
+       - Full Name
+
+6. Unfollow Event
+   - ID
+   - Created Time
+   - User
+       - ID
+       - Name
+       - Full Name
+   - Followee
+       - ID
+       - Name
+       - Full Name
