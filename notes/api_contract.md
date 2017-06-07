@@ -1,7 +1,7 @@
 # README
 
 ## Data Generation
-1. Users
+1. User
    - ID
    - Name
    - Full Name
@@ -17,6 +17,7 @@
        - ID
        - Name
        - Full Name
+       - Created Time
    - Tags
    - ID
    - Link
@@ -31,6 +32,7 @@
        - ID
        - Name
        - Full Name
+       - Created Time
    - Photo
        - ID
        - Tags
@@ -41,12 +43,14 @@
            - ID
            - Name
            - Full Name
+           - Created Time
 
 4. Like Event
    - User
        - ID
        - Name
        - Full Name
+       - Created Time
    - Created Time
    - ID
    - Photo
@@ -59,6 +63,7 @@
          - ID
          - Name
          - Full Name
+         - Created Time
 
 5. Follow Event
    - ID
@@ -67,10 +72,12 @@
        - ID
        - Name
        - Full Name
+       - Created Time
    - Followee
        - ID
        - Name
        - Full Name
+       - Created Time
 
 6. Unfollow Event
    - ID
@@ -79,7 +86,9 @@
        - ID
        - Name
        - Full Name
+       - Created Time
    - Followee
        - ID
        - Name
        - Full Name
+       - Created Time
