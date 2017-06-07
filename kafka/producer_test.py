@@ -103,9 +103,9 @@ def main(num_fakes: int = 100):
             "full_name": full_name,
             "created_time": datetime.now().strftime(config.datetime_format)
         }
-        producer.send_messages("create-user",
-                               bytes(record, "utf-8"),
-                               key=username)
+        json_producer.send("create-user",
+                           bytes(json.dumps(record), "utf-8"),
+                           key=username)
 
 
 if __name__ == '__main__':
