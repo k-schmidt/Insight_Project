@@ -12,8 +12,8 @@ import boto3  # type: ignore
 ###############################################################################
 # PATHS
 ###############################################################################
-PATH_SRC: str = os.path.dirname(os.path.abspath(__file__))
-PATH_INSTANCE: str = os.path.join(PATH_SRC, "instance")
+PATH_SRC = os.path.dirname(os.path.abspath(__file__))
+PATH_INSTANCE = os.path.join(PATH_SRC, "instance")
 
 ###############################################################################
 # AWS

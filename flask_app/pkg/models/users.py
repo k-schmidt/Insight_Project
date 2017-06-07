@@ -4,6 +4,8 @@ Kyle Schmidt
 
 Users Table
 """
+from datetime import datetime
+
 from .. import db
 from .model_base import Base
 

@@ -85,7 +85,7 @@ def transfer_file_s3(tablename: str,
 def main(user_file: str = "users.csv",
          s3_tablename: str = "users",
          bucket: str = "insight-hdfs",
-         num_fakes: int = 5000000,
+         num_fakes: int = 500,
          download_dir: str = PATH_INSTANCE):
     """
     Main method
@@ -95,14 +95,12 @@ def main(user_file: str = "users.csv",
         writer = csv.writer(user_csv)
         for username, full_name in gen_fake_users(num_fakes):
             record = (username,
-                      full_name,
-                      datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                      datetime.now().strftime("%Y-%m-%d"))
+                      full_name)
             writer.writerow(record)
 
-    transfer_file_s3(s3_tablename,
-                     path_users,
-                     bucket)
+    # transfer_file_s3(s3_tablename,
+    #                  path_users,
+    #                  bucket)
 
 if __name__ == '__main__':
     main()
