@@ -2,11 +2,6 @@
 Insight Data Engineering
 Kyle Schmidt
 
-<<<<<<< HEAD
-Test Kafka Producer
-"""
-from kafka import KafkaProducer
-=======
 Kafka Producer Test Script
 """
 from datetime import datetime
@@ -15,9 +10,8 @@ import random
 import re
 from typing import Generator, Tuple
 
-import avro.schema
 from faker import Faker
-from kafka import KafkaProducer
+from kafka import KafkaProducer, SimpleProducer, SimpleClient
 
 import config
 import config_secure
@@ -99,16 +93,20 @@ def main(num_fakes: int = 100):
     Main Method
     """
     json_producer = KafkaProducer(bootstrap_servers=config_secure.SERVERS,
+                                  client_id="create-user",
+                                  key_serializer=lambda m: bytes(m, 'utf-8'),
                                   value_serializer=lambda m: json.dumps(m).encode('ascii'))
     for username, full_name in gen_fake_users(num_fakes):
+        print(username, full_name)
         record = {
             "username": username,
             "full_name": full_name,
             "created_time": datetime.now().strftime(config.datetime_format)
         }
-        json_producer.send("create-user", record)
+        producer.send_messages("create-user",
+                               bytes(record, "utf-8"),
+                               key=username)
 
 
 if __name__ == '__main__':
     main()
->>>>>>> 4084b7779090691c72a3ec6d5cb73d62ccf22932
