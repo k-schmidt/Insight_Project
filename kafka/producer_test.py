@@ -8,56 +8,14 @@ from datetime import datetime
 import json
 import random
 import re
-from typing import Generator, Tuple
+import time
+from typing import Generator, List, Tuple
 
 from faker import Faker
-from kafka import KafkaProducer, SimpleProducer, SimpleClient
+from kafka.client import SimpleClient
+from kafka.producer import KeyedProducer
 
-import config
 import config_secure
-
-
-# EVENTS = {
-#     "photo": {
-#         "username": random.choice(config.users),
-#         "tags": random.choice(config.tags),
-#         "link": random.randrange(100),
-#         "created_time": datetime.now().strtime(config.datetime_format),
-#         "location": random.choice(config.locations)
-#     },
-#     "comment": {
-#         "text": ''.join(random.sample(string.ascii_letters, 15)),
-#         "user": random.choice(config.users),
-#         "photo": {
-#             "user": random.choice(config.users),
-#             "tags": random.choice(config.tags),
-#             "link": random.randrange(100),
-#             "created_time": datetime.now().strtime(config.datetime_format),
-#             "location": random.choice(config.locations)
-#         },
-#         "created_time": datetime.now().strfitme(config.datetime_format)
-#     },
-#     "like": {
-#         "username": random.choice(config.users),
-#         "photo": {
-#             "username": random.choice(config.users),
-#             "tags": random.choice(config.tags),
-#             "link": random.randrange(100),
-#             "created_time": datetime.now().strtime(config.datetime_format),
-#             "location": random.choice(config.locations)
-#         },
-#         "created_time": datetime.now().strtime(config.datetime_format)
-#     },
-#     "follow": {
-#         "username": random.choice(config.users),
-#         "followee": random.choice(config.users),
-#         "created_time": datetime.now().strftime(config.datetime_format)
-#     },
-#     "unfollow": {
-#         "username": random.choice(config.users),
-#         "followee": random.choice(config.users),
-#         "created_time": datetime.now().strtime(config.datetime_format)}
-# }
 
 
 def remove_non_alpha_chars(string: str) -> str:
@@ -88,25 +46,24 @@ def gen_fake_users(num_fakes: int) -> Generator[Tuple[str, str], None, None]:
         yield name, full_name
 
 
-def main(num_fakes: int = 1000000):
+def main(servers: List[str],
+         num_fakes: int = 1000000):
     """
     Main Method
     """
-    json_producer = KafkaProducer(bootstrap_servers=config_secure.SERVERS,
-                                  client_id="create-user",
-                                  key_serializer=lambda m: bytes(m, 'utf-8'),
-                                  value_serializer=lambda m: json.dumps(m).encode('ascii'))
+    simple_client = SimpleClient(servers)
+    create_user_producer = KeyedProducer(simple_client)
+
     for username, full_name in gen_fake_users(num_fakes):
-        print(username, full_name)
         record = {
             "username": username,
-            "full_name": full_name,
-            "created_time": datetime.now().strftime(config.datetime_format)
+            "full_name": full_name
         }
-        json_producer.send("create-user",
-                           bytes(json.dumps(record), "utf-8"),
-                           key=username)
+        create_user_producer.send_messages('create-user',
+                                           bytes(username, 'utf-8'),
+                                           json.dumps(record).encode('ascii'))
+        time.sleep(1)
 
 
 if __name__ == '__main__':
-    main()
+    main(config_secure.SERVERS)
