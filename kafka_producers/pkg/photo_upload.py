@@ -45,8 +45,8 @@ def get_datetime():
 
 
 def create_photo_producer(servers, Session):
-    # simple_client = SimpleClient(servers)
-    # producer = KeyedProducer(simple_client)
+    simple_client = SimpleClient(servers)
+    producer = KeyedProducer(simple_client)
     user = query_for_user(Session)
     tags = create_tags()
     location = generate_location()

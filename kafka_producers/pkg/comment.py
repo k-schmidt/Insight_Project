@@ -49,8 +49,8 @@ def query_photos(user, Session):
 
 
 def comment_producer(servers, Session):
-    # simple_client = SimpleClient(servers)
-    # producer = KeyedProducer(simple_client)
+    simple_client = SimpleClient(servers)
+    producer = KeyedProducer(simple_client)
     user = query_for_user(Session)
     photo = query_photos(user, Session)
     commenter = query_follower(user, Session)

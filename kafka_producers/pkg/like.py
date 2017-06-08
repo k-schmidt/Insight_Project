@@ -43,8 +43,8 @@ def query_photos(user, Session):
 
 
 def like_producer(servers, Session):
-    # simple_client = SimpleClient(servers)
-    # producer = KeyedProducer(simple_client)
+    simple_client = SimpleClient(servers)
+    producer = KeyedProducer(simple_client)
     user = query_for_user(Session)
     photo = query_photos(user, Session)
     follower = query_follower(user, Session)

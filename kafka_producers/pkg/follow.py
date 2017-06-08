@@ -29,8 +29,8 @@ def get_new_follower(Session):
 
 
 def follow_producer(servers, Session):
-    # simple_client = SimpleClient(servers)
-    # producer = KeyedProducer(simple_client)
+    simple_client = SimpleClient(servers)
+    producer = KeyedProducer(simple_client)
     followee, follower = get_new_follower(Session)
 
     record = {

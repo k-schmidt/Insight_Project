@@ -47,8 +47,8 @@ def fake_user() -> Tuple[str, str]:
 
 
 def create_user_producer(servers, Session):
-    # simple_client = SimpleClient(servers)
-    # producer = KeyedProducer(simple_client)
+    simple_client = SimpleClient(servers)
+    producer = KeyedProducer(simple_client)
     username, full_name = fake_user()
 
     record = {

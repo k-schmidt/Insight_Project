@@ -29,8 +29,8 @@ def get_unfollower(Session):
 
 
 def unfollow_producer(servers, Session):
-    # simple_client = SimpleClient(servers)
-    # producer = KeyedProducer(simple_client)
+    simple_client = SimpleClient(servers)
+    producer = KeyedProducer(simple_client)
     followee, follower = get_unfollower(Session)
     if not follower: return
     record = {
