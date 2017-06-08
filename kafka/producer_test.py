@@ -88,7 +88,7 @@ def gen_fake_users(num_fakes: int) -> Generator[Tuple[str, str], None, None]:
         yield name, full_name
 
 
-def main(num_fakes: int = 100):
+def main(num_fakes: int = 1000000):
     """
     Main Method
     """
