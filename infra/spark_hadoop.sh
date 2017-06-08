@@ -16,9 +16,9 @@
 
 PEG_ROOT=$(dirname ${BASH_SOURCE})/../..
 
-CLUSTER_NAME=spark-cluster
+CLUSTER_NAME=kafka-cluster
 
-peg up master.yml &
+#peg up master.yml &
 peg up workers.yml &
 
 wait
@@ -27,5 +27,7 @@ peg fetch ${CLUSTER_NAME}
 
 peg install ${CLUSTER_NAME} ssh
 peg install ${CLUSTER_NAME} aws
-peg install ${CLUSTER_NAME} hadoop
-peg install ${CLUSTER_NAME} spark
+# peg install ${CLUSTER_NAME} hadoop
+# peg install ${CLUSTER_NAME} spark
+peg install ${CLUSTER_NAME} zookeeper
+peg install ${CLUSTER_NAME} kafka

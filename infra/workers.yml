@@ -4,8 +4,8 @@ price: 0.13
 num_instances: 3
 key_name: k-schmidt
 security_group_ids: sg-3eb8b940
-instance_type: r3.2xlarge
-tag_name: spark-cluster
+instance_type: r3.4xlarge
+tag_name: kafka-cluster
 vol_size: 100
 role: worker
 use_eips: true
