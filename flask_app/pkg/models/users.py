@@ -7,6 +7,7 @@ Users Table
 from datetime import datetime
 
 from .. import db
+from .followers import Followers
 from .model_base import Base
 
 
@@ -33,3 +34,9 @@ class Users(Base):
     likes = db.relationship("Likes",
                             backref="users",
                             cascade="all")
+    followers = db.relationship("Users",
+                                secondary="followers",
+                                primaryjoin="Users.id==Followers.followee",
+                                secondaryjoin="Users.id==Followers.follower",
+                                backref="users",
+                                cascade="all")
