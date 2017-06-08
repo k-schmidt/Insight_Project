@@ -70,7 +70,7 @@ def like_producer(servers, Session):
         "updated_time": get_datetime()
     }
     if not photo or record: return
-    # producer.send_messages("comment",
-    #                        bytes(follower.username, 'utf-8'),
-    #                        json.dumps(record).encode('ascii'))
+    producer.send_messages("comment",
+                           bytes(follower.username, 'utf-8'),
+                           json.dumps(record).encode('ascii'))
     return record

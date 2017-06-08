@@ -54,7 +54,7 @@ def follow_producer(servers, Session):
         "updated_time": get_datetime()
     }
     if not record: return
-    # producer.send_messages("follow",
-    #                        bytes(follower.username, 'utf-8'),
-    #                        json.dumps(record).encode('ascii'))
+    producer.send_messages("follow",
+                           bytes(follower.username, 'utf-8'),
+                           json.dumps(record).encode('ascii'))
     return record

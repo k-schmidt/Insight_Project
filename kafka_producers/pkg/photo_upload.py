@@ -70,7 +70,7 @@ def create_photo_producer(servers, Session):
         "location": location
     }
     if not record: return
-    # producer.send_messages('photo-upload',
-    #                        bytes(user.username, 'utf-8'),
-    #                        json.dumps(record).encode('ascii'))
+    producer.send_messages('photo-upload',
+                           bytes(user.username, 'utf-8'),
+                           json.dumps(record).encode('ascii'))
     return record

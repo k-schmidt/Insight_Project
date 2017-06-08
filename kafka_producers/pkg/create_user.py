@@ -59,7 +59,7 @@ def create_user_producer(servers, Session):
         "last_login": get_datetime()
     }
     if not record: return
-    # producer.send_messages('create-user',
-    #                        bytes(username, 'utf-8'),
-    #                        json.dumps(record).encode('ascii'))
+    producer.send_messages('create-user',
+                           bytes(username, 'utf-8'),
+                           json.dumps(record).encode('ascii'))
     return record

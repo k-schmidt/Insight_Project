@@ -79,7 +79,7 @@ def comment_producer(servers, Session):
     }
     if not record: return
 
-    # producer.send_messages("comment",
-    #                        bytes(commenter.username, 'utf-8'),
-    #                        json.dumps(record).encode('ascii'))
+    producer.send_messages("comment",
+                           bytes(commenter.username, 'utf-8'),
+                           json.dumps(record).encode('ascii'))
     return record
