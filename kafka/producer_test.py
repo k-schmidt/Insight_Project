@@ -2,6 +2,11 @@
 Insight Data Engineering
 Kyle Schmidt
 
+<<<<<<< HEAD
+Test Kafka Producer
+"""
+from kafka import KafkaProducer
+=======
 Kafka Producer Test Script
 """
 from datetime import datetime
@@ -106,3 +111,4 @@ def main(num_fakes: int = 100):
 
 if __name__ == '__main__':
     main()
+>>>>>>> 4084b7779090691c72a3ec6d5cb73d62ccf22932

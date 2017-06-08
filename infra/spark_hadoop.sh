@@ -18,8 +18,8 @@ PEG_ROOT=$(dirname ${BASH_SOURCE})/../..
 
 CLUSTER_NAME=spark-cluster
 
-peg up ${PEG_ROOT}/examples/spark/master.yml &
-peg up ${PEG_ROOT}/examples/spark/workers.yml &
+peg up master.yml &
+peg up workers.yml &
 
 wait
 
