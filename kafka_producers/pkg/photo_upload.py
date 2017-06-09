@@ -41,7 +41,7 @@ def get_link():
 
 
 def get_datetime():
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.now().isoformat()
 
 
 def create_photo_producer(servers, Session):
@@ -52,15 +52,16 @@ def create_photo_producer(servers, Session):
     location = generate_location()
     created_time = get_datetime()
     updated_time = get_datetime()
+    print(created_time)
     link = get_link()
     record = {
         "user": {
             "id": user.id,
             "full_name": user.full_name,
             "username": user.username,
-            "last_login": user.last_login,
-            "created_time": user.created_time,
-            "updated_time": user.updated_time
+            "last_login": user.last_login.isoformat(),
+            "created_time": user.created_time.isoformat(),
+            "updated_time": user.updated_time.isoformat()
         },
         "tags": [{"id": 22, "tag": tag}
                  for tag in tags],

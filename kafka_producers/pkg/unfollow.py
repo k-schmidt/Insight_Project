@@ -15,7 +15,7 @@ from sqlalchemy.sql.expression import func
 
 
 def get_datetime():
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.now().isoformat()
 
 
 def get_unfollower(Session):
@@ -38,23 +38,23 @@ def unfollow_producer(servers, Session):
             "id": followee.id,
             "full_name": followee.full_name,
             "username": followee.username,
-            "last_login": followee.last_login,
-            "created_time": followee.created_time,
-            "updated_time": followee.updated_time
+            "last_login": followee.last_login.isoformat(),
+            "created_time": followee.created_time.isoformat(),
+            "updated_time": followee.updated_time.isoformat()
         },
         "follower": {
             "id": follower.id,
             "full_name": follower.full_name,
             "username": follower.username,
-            "last_login": follower.last_login,
-            "created_time": follower.created_time,
-            "updated_time": follower.updated_time
+            "last_login": follower.last_login.isoformat(),
+            "created_time": follower.created_time.isoformat(),
+            "updated_time": follower.updated_time.isoformat()
         },
         "created_time": get_datetime(),
         "updated_time": get_datetime()
     }
     if not record: return
-    producer.send_messages("unfollow",
+    producer.send_messages("unfollow-event",
                            bytes(follower.username, 'utf-8'),
                            json.dumps(record).encode('ascii'))
     return record

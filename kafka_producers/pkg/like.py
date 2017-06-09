@@ -15,7 +15,7 @@ from sqlalchemy.sql.expression import func
 
 
 def get_datetime():
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.now().isoformat()
 
 
 def query_for_user(Session):
@@ -54,23 +54,23 @@ def like_producer(servers, Session):
             "id": follower.id,
             "full_name": follower.id,
             "username": follower.username,
-            "last_login": follower.last_login,
-            "created_time": follower.created_time,
-            "updated_time": follower.updated_time
+            "last_login": follower.last_login.isoformat(),
+            "created_time": follower.created_time.isoformat(),
+            "updated_time": follower.updated_time.isoformat()
         },
         "photo": {
             "id": photo.id,
             "tags": [{"id": tag.id, "tag": tag.tag} for tag in photo.tags],
             "link": photo.link,
-            "created_time": photo.created_time,
-            "updated_time": photo.updated_time,
+            "created_time": photo.created_time.isoformat(),
+            "updated_time": photo.updated_time.isoformat(),
             "location": photo.location
         },
         "created_time": get_datetime(),
         "updated_time": get_datetime()
     }
     if not photo or record: return
-    producer.send_messages("comment",
+    producer.send_messages("like",
                            bytes(follower.username, 'utf-8'),
                            json.dumps(record).encode('ascii'))
     return record

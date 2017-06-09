@@ -16,7 +16,7 @@ from kafka.producer import KeyedProducer
 
 
 def get_datetime():
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.now().isoformat()
 
 
 def remove_non_alpha_chars(string: str) -> str:
