@@ -16,7 +16,7 @@ from sqlalchemy.sql.expression import func
 
 
 def get_datetime():
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.now().isoformat()
 
 
 def get_text():
@@ -61,17 +61,17 @@ def comment_producer(servers, Session):
             "id": commenter.id,
             "full_name": commenter.full_name,
             "username": commenter.username,
-            "last_login": commenter.last_login,
-            "created_time": commenter.created_time,
-            "updated_time": commenter.updated_time
+            "last_login": commenter.last_login.isoformat(),
+            "created_time": commenter.created_time.isoformat(),
+            "updated_time": commenter.updated_time.isoformat()
         },
         "photo": {
             "id": photo.id,
             "tags": [{"id": tag.id, "tag": tag.tag} for tag in photo.tags],
             "link": photo.link,
-            "created_time": photo.created_time,
-            "updated_time": photo.updated_time,
-            "location": photo.location
+            "created_time": photo.created_time.isoformat(),
+            "updated_time": photo.updated_time.isoformat(),
+            "location": photo.location.isoformat()
         },
         "text": text,
         "created_time": get_datetime(),
