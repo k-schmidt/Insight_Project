@@ -41,7 +41,7 @@ def get_link():
 
 
 def get_datetime():
-    return datetime.now().isoformat()
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 def create_photo_producer(servers, Session):

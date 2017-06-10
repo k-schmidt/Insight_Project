@@ -34,12 +34,12 @@ def main(servers: List[str]) -> None:
     Session = sessionmaker(bind=engine)
 
     events = [
-        comment_producer,
+        # comment_producer,
         create_user_producer,
-        follow_producer,
-        like_producer,
-        create_photo_producer,
-        unfollow_producer
+        # follow_producer,
+        # like_producer,
+        # create_photo_producer,
+        # unfollow_producer
     ]
 
     while True:

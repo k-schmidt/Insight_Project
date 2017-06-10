@@ -6,6 +6,7 @@ Create User Kafka Producer
 """
 from datetime import datetime
 import json
+import random
 import re
 import time
 from typing import Tuple
@@ -16,7 +17,7 @@ from kafka.producer import KeyedProducer
 
 
 def get_datetime():
-    return datetime.now().isoformat()
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
 
 def remove_non_alpha_chars(string: str) -> str:
@@ -43,7 +44,8 @@ def fake_user() -> Tuple[str, str]:
     fake = Faker()
     full_name = fake.name()  # pylint: disable=no-member
     name = remove_non_alpha_chars(full_name).lower()
-    return name, full_name
+    username = name + "{:03d}".format(random.randrange(1, 999))
+    return username, full_name
 
 
 def create_user_producer(servers, Session):
@@ -55,11 +57,9 @@ def create_user_producer(servers, Session):
         "username": username,
         "full_name": full_name,
         "created_time": get_datetime(),
-        "updated_time": get_datetime(),
-        "last_login": get_datetime()
     }
     if not record: return
     producer.send_messages('create-user',
                            bytes(username, 'utf-8'),
-                           json.dumps(record).encode('ascii'))
+                           json.dumps(record).encode('utf-8'))
     return record
