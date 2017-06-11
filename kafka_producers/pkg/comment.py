@@ -9,6 +9,7 @@ import json
 import random
 import string
 import time
+import uuid
 
 from faker import Factory
 from kafka.client import SimpleClient
@@ -17,7 +18,7 @@ from sqlalchemy.sql.expression import func
 
 
 def get_datetime():
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return str(uuid.uuid1())
 
 
 def get_text():
@@ -64,6 +65,6 @@ def comment_producer(servers, mysql_session, cassandra_session):
         "created_time": created_time,
     }
     producer.send_messages("comment",
-                           bytes(commenter.username, 'utf-8'),
-                           json.dumps(record).encode('utf-8'))
+                           bytes(commenter.username, 'ascii'),
+                           json.dumps(record).encode('ascii'))
     return record

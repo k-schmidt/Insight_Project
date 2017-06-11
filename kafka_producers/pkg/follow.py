@@ -7,6 +7,7 @@ Follow Kafka Producer
 from datetime import datetime
 import json
 import time
+import uuid
 
 from kafka.client import SimpleClient
 from kafka.producer import KeyedProducer
@@ -14,7 +15,7 @@ from sqlalchemy.sql.expression import func
 
 
 def get_datetime():
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return str(uuid.uuid1())
 
 
 def get_new_follower(mysql_session):
@@ -40,6 +41,6 @@ def follow_producer(servers, mysql_session, cassandra_session):
         "created_time": get_datetime(),
     }
     producer.send_messages("follow",
-                           bytes(follower.username, 'utf-8'),
-                           json.dumps(record).encode('utf-8'))
+                           bytes(follower.username, 'ascii'),
+                           json.dumps(record).encode('ascii'))
     return record

@@ -9,6 +9,7 @@ import json
 import random
 import string
 import time
+import uuid
 
 from kafka.client import SimpleClient
 from kafka.producer import KeyedProducer
@@ -38,7 +39,7 @@ def get_link():
 
 
 def get_datetime():
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return str(uuid.uuid1())
 
 
 def create_photo_producer(servers, mysql_session, cassandra_session):
@@ -59,6 +60,6 @@ def create_photo_producer(servers, mysql_session, cassandra_session):
         "longitude": location.longitude
     }
     producer.send_messages('photo-upload',
-                           bytes(user.username, 'utf-8'),
-                           json.dumps(record).encode('utf-8'))
+                           bytes(user.username, 'ascii'),
+                           json.dumps(record).encode('ascii'))
     return record

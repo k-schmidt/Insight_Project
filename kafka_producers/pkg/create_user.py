@@ -10,6 +10,7 @@ import random
 import re
 import time
 from typing import Tuple
+import uuid
 
 from faker import Faker
 from kafka.client import SimpleClient
@@ -60,8 +61,8 @@ def create_user_producer(servers, mysql_session, cassandra_session):
         "created_time": created_time,
     }
     producer.send_messages('create-user',
-                           bytes(username, 'utf-8'),
-                           json.dumps(record).encode('utf-8'))
+                           bytes(username, 'ascii'),
+                           json.dumps(record).encode('ascii'))
     mysql_session.execute("INSERT INTO users (created_time, username, full_name) values ('{created_time}', '{username}', '{full_name}');"
                           .format(created_time=created_time,
                                   username=username,
