@@ -23,12 +23,11 @@ class Photos(Base):
                         nullable=False)
     tags = db.relationship("Tags",
                            secondary="match_photos_tags",
-                           backref="photos",
+                           backref="",
                            cascade="all")
     comments = db.relationship("Comments",
                                backref="photos",
                                cascade="all")
     likes = db.relationship("Users",
                             secondary="likes",
-                            backref="photos",
                             cascade="all")

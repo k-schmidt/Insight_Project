@@ -1,10 +1,11 @@
 purchase_type: on_demand
 subnet_id: subnet-759aee10
-num_instances: 1
+price: 0.13
+num_instances: 3
 key_name: k-schmidt
 security_group_ids: sg-3eb8b940
-instance_type: r3.2xlarge
+instance_type: m4.large
 tag_name: spark-cluster
 vol_size: 100
-role: master
+role: worker
 use_eips: true

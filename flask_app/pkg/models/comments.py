@@ -13,7 +13,6 @@ class Comments(Base):
     __tablename__ = "comments"
 
     comment = db.Column(db.String(50),
-                        index=True,
                         nullable=False)
     user_id = db.Column(db.Integer(),
                         db.ForeignKey("users.id"),
