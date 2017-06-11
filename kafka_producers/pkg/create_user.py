@@ -48,18 +48,23 @@ def fake_user() -> Tuple[str, str]:
     return username, full_name
 
 
-def create_user_producer(servers, Session):
+def create_user_producer(servers, mysql_session, cassandra_session):
     simple_client = SimpleClient(servers)
     producer = KeyedProducer(simple_client)
     username, full_name = fake_user()
+    created_time = get_datetime()
 
     record = {
         "username": username,
         "full_name": full_name,
-        "created_time": get_datetime(),
+        "created_time": created_time,
     }
-    if not record: return
     producer.send_messages('create-user',
                            bytes(username, 'utf-8'),
                            json.dumps(record).encode('utf-8'))
+    mysql_session.execute("INSERT INTO users (created_time, username, full_name) values ('{created_time}', '{username}', '{full_name}');"
+                          .format(created_time=created_time,
+                                  username=username,
+                                  full_name=full_name))
+    mysql_session.commit()
     return record

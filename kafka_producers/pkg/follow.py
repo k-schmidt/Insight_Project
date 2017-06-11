@@ -17,44 +17,29 @@ def get_datetime():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
-def get_new_follower(Session):
-    session = Session()
-    sql_string = "SELECT * from users order by rand();"
-    followee = session.execute(sql_string).first()
+def get_new_follower(mysql_session):
+    sql_string = "SELECT * from users order by rand() limit 1;"
+    followee = list(mysql_session.execute(sql_string))
+    follower = list(mysql_session.execute(sql_string))
+    if followee is None or follower is None:
+        return None, None
+    while followee == follower:
+        follower = list(mysql_session.execute(sql_string))
 
-    follower_string = "SELECT * from users left join followers on users.id = followers.followee where users.id != {} order by rand()".format(followee.id)
-    follower = session.execute(follower_string).first()
-    session.close()
-    return followee, follower
+    return followee[0], follower[0]
 
 
-def follow_producer(servers, Session):
+def follow_producer(servers, mysql_session, cassandra_session):
     simple_client = SimpleClient(servers)
     producer = KeyedProducer(simple_client)
-    followee, follower = get_new_follower(Session)
-    if not follower or not follower.created_time: return
+    followee, follower = get_new_follower(mysql_session)
+    if not all([followee, follower]): return
     record = {
-        "followee": {
-            "id": followee.id,
-            "full_name": followee.full_name,
-            "username": followee.username,
-            "last_login": followee.last_login.isoformat(),
-            "created_time": followee.created_time.isoformat(),
-            "updated_time": followee.updated_time.isoformat()
-        },
-        "follower": {
-            "id": follower.id,
-            "full_name": follower.full_name,
-            "username": follower.username,
-            "last_login": follower.last_login.isoformat(),
-            "created_time": follower.created_time.isoformat(),
-            "updated_time": follower.updated_time.isoformat()
-        },
+        "follower_username": follower.username,
+        "followed_username": followee.username,
         "created_time": get_datetime(),
-        "updated_time": get_datetime()
     }
-    if not record: return
     producer.send_messages("follow",
                            bytes(follower.username, 'utf-8'),
-                           json.dumps(record).encode('ascii'))
+                           json.dumps(record).encode('utf-8'))
     return record

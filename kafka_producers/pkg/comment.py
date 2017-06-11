@@ -10,6 +10,7 @@ import random
 import string
 import time
 
+from faker import Factory
 from kafka.client import SimpleClient
 from kafka.producer import KeyedProducer
 from sqlalchemy.sql.expression import func
@@ -20,66 +21,49 @@ def get_datetime():
 
 
 def get_text():
-    return "".join([random.choice(string.ascii_letters)
-                    for i in range(random.randrange(15))])
+    fake = Factory.create()
+    return fake.sentence()
 
 
-def query_for_user(Session):
-    session = Session()
-    sql_string = "SELECT * from users order by rand();"
-    user = session.execute(sql_string).first()
-    session.close()
-    return user
+def query_for_user(mysql_session):
+    sql_string = "SELECT * from users order by rand() limit 1;"
+    user = list(mysql_session.execute(sql_string))
+    return user[0] if user else None
 
 
-def query_follower(user, Session):
-    session = Session()
-    sql_string = "SELECT * from users left join followers on users.id != followers.followee where users.id = {} order by rand()".format(user.id)
-    user = session.execute(sql_string).first()
-    session.close()
-    return user
+def query_follower(user, cassandra_session):
+    cql_string = "SELECT * from user_inbound_follows where followed_username = '{}';".format(user.username)
+    result = list(cassandra_session.execute(cql_string))
+    follower = random.choice(result) if result else None
+    return follower
 
 
-def query_photos(user, Session):
-    session = Session()
-    sql_string = "SELECT * from photos where user_id = {} order by rand()".format(user.id)
-    photo = session.execute(sql_string).first()
-    session.close()
+def query_photos(user, cassandra_session):
+    cql_string = "SELECT photo_id from user_status_updates where username = '{}';"\
+        .format(user.username)
+    result = list(cassandra_session.execute(cql_string))
+    photo = random.choice(result) if result else None
     return photo
+                          
 
-
-def comment_producer(servers, Session):
+def comment_producer(servers, mysql_session, cassandra_session):
     simple_client = SimpleClient(servers)
     producer = KeyedProducer(simple_client)
-    user = query_for_user(Session)
-    photo = query_photos(user, Session)
-    commenter = query_follower(user, Session)
+    user = query_for_user(mysql_session)
+    photo = query_photos(user, cassandra_session)
+    commenter = query_follower(user, cassandra_session)
     text = get_text()
-    if not photo: return
-    record = {
-        "user": {
-            "id": commenter.id,
-            "full_name": commenter.full_name,
-            "username": commenter.username,
-            "last_login": commenter.last_login.isoformat(),
-            "created_time": commenter.created_time.isoformat(),
-            "updated_time": commenter.updated_time.isoformat()
-        },
-        "photo": {
-            "id": photo.id,
-            "tags": [{"id": tag.id, "tag": tag.tag} for tag in photo.tags],
-            "link": photo.link,
-            "created_time": photo.created_time.isoformat(),
-            "updated_time": photo.updated_time.isoformat(),
-            "location": photo.location.isoformat()
-        },
-        "text": text,
-        "created_time": get_datetime(),
-        "updated_time": get_datetime()
-    }
-    if not record: return
+    created_time = get_datetime()
 
+    if not all([photo, commenter, user]): return
+    record = {
+        "follower_username": follower.username,
+        "followed_username": user.username,
+        "photo_id": photo.photo_id,
+        "text": text,
+        "created_time": created_time,
+    }
     producer.send_messages("comment",
                            bytes(commenter.username, 'utf-8'),
-                           json.dumps(record).encode('ascii'))
+                           json.dumps(record).encode('utf-8'))
     return record

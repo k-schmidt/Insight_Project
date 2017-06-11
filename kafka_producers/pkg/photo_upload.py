@@ -15,25 +15,22 @@ from kafka.producer import KeyedProducer
 from sqlalchemy.sql.expression import func
 
 
-def query_for_user(Session):
-    session = Session()
-    sql_string = "SELECT * from users order by rand();"
-    user = session.execute(sql_string).first()
-    session.close()
-    return user
+def query_for_user(mysql_session):
+    sql_string = "SELECT * from users order by rand() limit 1;"
+    sql_user = list(mysql_session.execute(sql_string))
+    return sql_user[0] if sql_user else None
 
 
-def create_tags():
-    return ["".join([random.choice(string.ascii_letters)
-                     for i in range(random.randrange(15))])]
+def create_tags(mysql_session):
+    sql_string = "SELECT * from tags order by rand() limit 1;"
+    brand = list(mysql_session.execute(sql_string))
+    return brand[0] if brand else None
 
 
-def generate_location():
-    range_x = (0, 2500)
-    range_y = (0, 2500)
-    x = random.randrange(*range_x)
-    y = random.randrange(*range_y)
-    return "({x},{y})".format(x=x, y=y)
+def generate_location(mysql_session):
+    sql_string = "SELECT latitude, longitude from locations order by rand() limit 1;"
+    location = list(mysql_session.execute(sql_string))
+    return location[0] if location else None
 
 
 def get_link():
@@ -44,34 +41,24 @@ def get_datetime():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
-def create_photo_producer(servers, Session):
+def create_photo_producer(servers, mysql_session, cassandra_session):
     simple_client = SimpleClient(servers)
     producer = KeyedProducer(simple_client)
-    user = query_for_user(Session)
-    tags = create_tags()
-    location = generate_location()
+    user = query_for_user(mysql_session)
+    tags = create_tags(mysql_session)
+    location = generate_location(mysql_session)
     created_time = get_datetime()
-    updated_time = get_datetime()
-    print(created_time)
     link = get_link()
+    if not user: return
     record = {
-        "user": {
-            "id": user.id,
-            "full_name": user.full_name,
-            "username": user.username,
-            "last_login": user.last_login.isoformat(),
-            "created_time": user.created_time.isoformat(),
-            "updated_time": user.updated_time.isoformat()
-        },
-        "tags": [{"id": 22, "tag": tag}
-                 for tag in tags],
-        "link": link,
+        "username": user.username,
+        "tags": [tag for tag in tags],
+        "photo_link": link,
         "created_time": created_time,
-        "updated_time": updated_time,
-        "location": location
+        "latitude": location.latitude,
+        "longitude": location.longitude
     }
-    if not record: return
     producer.send_messages('photo-upload',
                            bytes(user.username, 'utf-8'),
-                           json.dumps(record).encode('ascii'))
+                           json.dumps(record).encode('utf-8'))
     return record
