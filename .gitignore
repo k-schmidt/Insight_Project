@@ -7,3 +7,5 @@
 *.mypy_cache
 *instance/*.csv
 flask_app/run_app.sh
+flask_app_instabrand/node_modules
+flask_app_instabrand/app/config_secure.py
