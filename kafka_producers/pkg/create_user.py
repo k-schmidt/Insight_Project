@@ -7,7 +7,6 @@ Create User Kafka Producer
 from datetime import datetime
 import json
 import random
-import re
 import time
 from typing import Tuple
 import uuid
@@ -49,24 +48,20 @@ def fake_user() -> Tuple[str, str]:
     return username, full_name
 
 
-def create_user_producer(servers, mysql_session, cassandra_session):
-    with mysql_session.cursor() as cursor:
-        simple_client = SimpleClient(servers)
-        producer = KeyedProducer(simple_client)
-        username, full_name = fake_user()
-        created_time = get_datetime()
+def create_user_producer(servers, users, photos, tags, locations):
+    simple_client = SimpleClient(servers)
+    producer = KeyedProducer(simple_client)
+    username, full_name = fake_user()
+    created_time = get_datetime()
 
-        record = {
-            "username": username,
-            "full_name": full_name,
-            "created_time": created_time,
-        }
-        producer.send_messages('create-user',
-                               bytes(username, 'utf-8'),
-                               json.dumps(record).encode('utf-8'))
-        cursor.execute("INSERT INTO users (created_time, username, full_name) values ('{created_time}', '{username}', '{full_name}');"
-                              .format(created_time=created_time,
-                                      username=username,
-                                      full_name=full_name))
-    mysql_session.commit()
+    record = {
+        "username": username,
+        "full_name": full_name,
+        "created_time": created_time,
+        "event": "create-user"
+    }
+    producer.send_messages("create-user",
+                           bytes(username, 'utf-8'),
+                           json.dumps(record).encode('utf-8'))
+    users.append(username)
     return record
