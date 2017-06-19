@@ -15,3 +15,4 @@ spark/ProcessTopics/.idea/*
 spark/ProcessTopics/project/project/*
 spark/ProcessTopics/project/target/*
 spark/ProcessTopics/target/*
+flask_app_instabrand/instance/*

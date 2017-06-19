@@ -1,12 +1,17 @@
 from datetime import datetime
+import json
+import os
 
 import boto3
-from flask import render_template, url_for, request
+from flask import render_template, url_for, request, redirect
+from kafka import KafkaProducer
 from kafka.client import SimpleClient
+from kafka.errors import KafkaError
 from kafka.producer import KeyedProducer
 
 import app
 from app import helper_methods
+from app.config_secure import SERVERS
 
 
 @app.app.route('/<username>')
@@ -31,15 +36,21 @@ def page_not_found(error):
 def user_upload(username):
     username = request.form["username"]
     tags = request.form["tags"].split(",")
-    upload_file = request.form["filename"]
-    date_today = datetime.today().strftime("%Y-%m-%d %H%M%S")
+    upload_file = request.files["filename"]
+    date_today = datetime.now().strftime("%Y-%m-%d %H%M%S.%f")
+
+    print(username, tags, upload_file)
+
+    local_file_path = os.path.join(app.app.config["UPLOAD_FOLDER"], upload_file.filename)
+    upload_file.save(local_file_path)
 
     s3_bucket = "instabrand-assets"
     s3_name = f"{username}/{date_today}"
 
-    boto3.resource('s3').meta.client.upload_file(upload_file,
-                                                 s3_bucket,
-                                                 s3_name)
+    s3 = boto3.resource('s3')
+    s3.meta.client.upload_file(local_file_path,
+                               s3_bucket,
+                               s3_name)
     url = boto3.client('s3').generate_presigned_url(
         ClientMethod='get_object',
         Params={
@@ -47,7 +58,8 @@ def user_upload(username):
             "Key": s3_name
         }
     )
-    print(url)
+    object_acl = s3.ObjectAcl(s3_bucket, s3_name)
+    response = object_acl.put(ACL='public-read')
 
     kafka_message = {
         "username": username,
@@ -59,11 +71,11 @@ def user_upload(username):
         "event": "photo-upload"
     }
 
-    simple_client = SimpleClient(servers)
-    producer = KeyedProducer(simple_client)
-    producer.send_messages("photo-upload",
-                           bytes(username, "utf-8"),
-                           json.dumps(kafka_message).encode("utf-8"))
+    producer = KafkaProducer(bootstrap_servers=SERVERS,
+                             value_serializer=lambda m: json.dumps(m).encode('utf-8'))
+    producer.send("photo-upload",
+                  key=bytes(username, "utf-8"),
+                  value=kafka_message)
     return redirect(url_for('user_photos', username=username))
 
 
