@@ -67,7 +67,7 @@ def main(servers: List[str]) -> None:
 
     events = [
         comment_producer,
-        create_user_producer,
+        #create_user_producer,
         follow_producer,
         like_producer,
         create_photo_producer,

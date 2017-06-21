@@ -7,6 +7,7 @@ Create User Kafka Producer
 from datetime import datetime
 import json
 import random
+import re
 import time
 from typing import Tuple
 import uuid
@@ -59,5 +60,5 @@ def create_user_producer(servers, users, photos, tags, locations, producer):
     producer.send_messages("create-user",
                            bytes(username, 'utf-8'),
                            json.dumps(record).encode('utf-8'))
-    users.append(username)
+    users.append((username,))
     return record
