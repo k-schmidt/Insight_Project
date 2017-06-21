@@ -82,16 +82,16 @@
           <br>
           {% if m.photo_tags %}
           <ul class="list-inline">
-            {% for tag in m.photo_tags if m.photo_tags %}
+            {% for tag in m.g_tags if m.g_tags %}
             <li>{{ tag }}</li>
             {% endfor %}
           </ul>
           {% endif %}
-          {% if m.photo_comments %}
-          {% for comment in m.photo_comments if m.photo_comments %}
+          {% if m.g_comments %}
+          {% for comment in m.g_comments if m.g_comments %}
           <d1 class="d1-horizontal">
-            <dt>{{ comment["username"] }}</dt>
-            <dd>{{ comment["comment"] }}</dd>
+            <dt>{{ comment[0] }}</dt>
+            <dd>{{ comment[1] }}</dd>
           </d1>
           {% endfor %}
           {% endif %}

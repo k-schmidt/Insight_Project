@@ -27,7 +27,7 @@ def query_photos(user, cassandra_session):
     result = list(cassandra_session.execute(cql_string))
     photo = random.choice(result) if result else None
     return photo
-                          
+
 
 def comment_producer(servers, users, photos, tags, locations, producer):
     if len(photos) == 0:
