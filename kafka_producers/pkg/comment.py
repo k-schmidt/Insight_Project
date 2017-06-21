@@ -10,12 +10,10 @@ import random
 import string
 
 from faker import Factory
-from kafka.client import SimpleClient
-from kafka.producer import KeyedProducer
 
 
 def get_datetime():
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 def get_text():
@@ -31,13 +29,11 @@ def query_photos(user, cassandra_session):
     return photo
                           
 
-def comment_producer(servers, users, photos, tags, locations):
+def comment_producer(servers, users, photos, tags, locations, producer):
     if len(photos) == 0:
         return
-    followee, follower = random.choice(users)[0], random.choice(users)[0]
-    photo = random.choice(photos)
-    simple_client = SimpleClient(servers)
-    producer = KeyedProducer(simple_client)
+    follower = random.choice(users)[0]
+    photo, followee = random.choice(photos)
     text = get_text()
     created_time = get_datetime()
 

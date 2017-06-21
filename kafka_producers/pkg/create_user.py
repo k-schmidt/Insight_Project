@@ -12,12 +12,10 @@ from typing import Tuple
 import uuid
 
 from faker import Faker
-from kafka.client import SimpleClient
-from kafka.producer import KeyedProducer
 
 
 def get_datetime():
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 def remove_non_alpha_chars(string: str) -> str:
@@ -48,9 +46,7 @@ def fake_user() -> Tuple[str, str]:
     return username, full_name
 
 
-def create_user_producer(servers, users, photos, tags, locations):
-    simple_client = SimpleClient(servers)
-    producer = KeyedProducer(simple_client)
+def create_user_producer(servers, users, photos, tags, locations, producer):
     username, full_name = fake_user()
     created_time = get_datetime()
 

@@ -8,17 +8,12 @@ from datetime import datetime
 import json
 import random
 
-from kafka.client import SimpleClient
-from kafka.producer import KeyedProducer
-
 
 def get_datetime():
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
-def unfollow_producer(servers, users, photos, tags, locations):
-    simple_client = SimpleClient(servers)
-    producer = KeyedProducer(simple_client)
+def unfollow_producer(servers, users, photos, tags, locations, producer):
     followee, follower = random.choice(users)[0], random.choice(users)[0]
     if not all([followee, follower]): return
     record = {
