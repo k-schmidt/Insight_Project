@@ -85,7 +85,7 @@ The pipiline is centered around six events:
 
 ## Tools
 This application is primarily a streaming exercise.
-Events are produced to [Kafka](https://kafka.apache.org/) and are consumed by [Spark Streaming](https://spark.apache.org/streaming/). However, we don't want to risk losing data to the stream is redundantly batch processed using [Secor](https://github.com/pinterest/secor) and loaded into [AWS S3](https://aws.amazon.com/s3/), partitioned by date in case this data needs to leverage a technology like Hive or Presto.
+Events are produced to [Kafka](https://kafka.apache.org/) and are consumed by [Spark Streaming](https://spark.apache.org/streaming/). However, we don't want to risk losing data so the stream is redundantly batch processed using [Secor](https://github.com/pinterest/secor) and loaded into [AWS S3](https://aws.amazon.com/s3/), partitioned by date in case this data needs to leverage a technology like Hive or Presto in the future.
 Aggregations are performed in Spark as well as the logic ensuring a user's timeline is populated with the photos and updates of all the people they follow.
 The aggregations are then loaded into [MySQL](https://www.mysql.com/) while the raw events are publicized using [Cassandra](http://cassandra.apache.org/).
 
