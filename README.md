@@ -35,7 +35,7 @@ The pipiline is centered around six events:
     "photo_link": "2017-06-12 19:42:07",
     "created_time": "2017-06-20 05:30:22",
     "latitude": "46.265",
-    "longitude": ""26.623",
+    "longitude": "26.623",
     "event": "photo-upload"
 }
 ```
@@ -67,7 +67,7 @@ The pipiline is centered around six events:
     "followed_username": "billyjoel219",
     "follower_username": "neildiamond54",
     "photo_id": "2017-06-12 19:42:07",
-    "text": "E pluribus unum"
+    "text": "E pluribus unum",
     "created_time": "2017-06-22 12:49:09",
     "event": "comment"
 }
