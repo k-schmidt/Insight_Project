@@ -16,7 +16,8 @@ from faker import Faker
 
 
 def get_datetime():
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    datetime_obj = datetime.now()
+    return datetime_obj.strftime("%Y-%m-%d %H:%M:%S"), datetime_obj.strftime("%Y-%m-%d")
 
 
 def remove_non_alpha_chars(string: str) -> str:
@@ -49,12 +50,13 @@ def fake_user() -> Tuple[str, str]:
 
 def create_user_producer(servers, users, photos, tags, locations, producer):
     username, full_name = fake_user()
-    created_time = get_datetime()
+    created_time, partition_date = get_datetime()
 
     record = {
         "username": username,
         "full_name": full_name,
         "created_time": created_time,
+        "partition_date": partition_date,
         "event": "create-user"
     }
     producer.send_messages("create-user",

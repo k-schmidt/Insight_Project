@@ -13,7 +13,8 @@ from faker import Factory
 
 
 def get_datetime():
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    datetime_obj = datetime.now()
+    return datetime_obj.strftime("%Y-%m-%d %H:%M:%S"), datetime_obj.strftime("%Y-%m-%d")
 
 
 def get_text():
@@ -35,7 +36,7 @@ def comment_producer(servers, users, photos, tags, locations, producer):
     follower = random.choice(users)[0]
     photo, followee = random.choice(photos)
     text = get_text()
-    created_time = get_datetime()
+    created_time, partition_date = get_datetime()
 
     if not all([photo, follower, followee]): return
     record = {
@@ -44,9 +45,10 @@ def comment_producer(servers, users, photos, tags, locations, producer):
         "photo_id": photo,
         "text": text,
         "created_time": created_time,
+        "partition_date": partition_date,
         "event": "comment"
     }
     producer.send_messages("comment",
-                           bytes(follower, 'utf-8'),
+                           bytes(followee, 'utf-8'),
                            json.dumps(record).encode('utf-8'))
     return record

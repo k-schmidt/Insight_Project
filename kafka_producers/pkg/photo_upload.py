@@ -11,20 +11,22 @@ import string
 
 
 def get_datetime():
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    datetime_obj = datetime.now()
+    return datetime_obj.strftime("%Y-%m-%d %H:%M:%S"), datetime_obj.strftime("%Y-%m-%d")
 
 
 def create_photo_producer(servers, users, photos, tags, locations, producer):
     user = random.choice(users)[0]
     tag, link = random.choice(tags)
     latitude, longitude = random.choice(locations)
-    created_time = get_datetime()
+    created_time, partition_date = get_datetime()
     if not user: return
     record = {
         "username": user,
         "tags": tag,
         "photo_link": link,
         "created_time": created_time,
+        "partition_date": partition_date,
         "latitude": latitude,
         "longitude": longitude,
         "event": "photo-upload"

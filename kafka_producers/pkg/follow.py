@@ -10,16 +10,19 @@ import random
 
 
 def get_datetime():
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    datetime_obj = datetime.now()
+    return datetime_obj.strftime("%Y-%m-%d %H:%M:%S"), datetime_obj.strftime("%Y-%m-%d")
 
 
 def follow_producer(servers, users, photos, tags, locations, producer):
     followee, follower = random.choice(users)[0], random.choice(users)[0]
     if not all([followee, follower]): return
+    created_time, parition_date = get_datetime()
     record = {
         "follower_username": follower,
         "followed_username": followee,
-        "created_time": get_datetime(),
+        "created_time": created_time,
+        "partition_date": parition_date,
         "event": "follow"
     }
     producer.send_messages("follow",
