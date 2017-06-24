@@ -33,53 +33,53 @@
   </head>
 
   <body>
-    <script type="text/javascript">
-     setInterval(function() {
-       $.getJSON('/consume-photos', function (data) {
+    <!-- <script type="text/javascript"> -->
+    <!--  setInterval(function() { -->
+    <!--    $.getJSON('/consume-photos', function (data) { -->
 
-         console.log(data)
+    <!--      console.log(data) -->
 
-       Highcharts.mapChart('container3', {
-         chart: {
-           borderWidth: 1,
-           map: 'custom/world'
-         },
-         title: {
-           text: 'World population 2013 by country'
-         },
-         subtitle: {
-           text: 'Demo of Highcharts map with bubbles'
-         },
-         legend: {
-           enabled: false
-         },
-         mapNavigation: {
-           enabled: true,
-           buttonOptions: {
-             verticalAlign: 'bottom'
-           }
-         },
-         series: [{
-           name: 'Countries',
-           color: '#E0E0E0',
-           enableMouseTracking: false
-         }, {
-           type: 'mapbubble',
-           name: 'Population 2013',
-           joinBy: ['iso-a2', 'code'],
-           data: data,
-           minSize: 4,
-           maxSize: '12%',
-           tooltip: {
-             pointFormat: '{point.code}: {point.z} thousands'
-           }
-         }]
-       });
-     });
-     }, 1000);
+    <!--    Highcharts.mapChart('container3', { -->
+    <!--      chart: { -->
+    <!--        borderWidth: 1, -->
+    <!--        map: 'custom/world' -->
+    <!--      }, -->
+    <!--      title: { -->
+    <!--        text: 'World population 2013 by country' -->
+    <!--      }, -->
+    <!--      subtitle: { -->
+    <!--        text: 'Demo of Highcharts map with bubbles' -->
+    <!--      }, -->
+    <!--      legend: { -->
+    <!--        enabled: false -->
+    <!--      }, -->
+    <!--      mapNavigation: { -->
+    <!--        enabled: true, -->
+    <!--        buttonOptions: { -->
+    <!--          verticalAlign: 'bottom' -->
+    <!--        } -->
+    <!--      }, -->
+    <!--      series: [{ -->
+    <!--        name: 'Countries', -->
+    <!--        color: '#E0E0E0', -->
+    <!--        enableMouseTracking: false -->
+    <!--      }, { -->
+    <!--        type: 'mapbubble', -->
+    <!--        name: 'Population 2013', -->
+    <!--        joinBy: ['iso-a2', 'code'], -->
+    <!--        data: data, -->
+    <!--        minSize: 4, -->
+    <!--        maxSize: '12%', -->
+    <!--        tooltip: { -->
+    <!--          pointFormat: '{point.code}: {point.z} thousands' -->
+    <!--        } -->
+    <!--      }] -->
+    <!--    }); -->
+    <!--  }); -->
+    <!--  }, 1000); -->
 
 
-    </script>
+    <!-- </script> -->
 
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">

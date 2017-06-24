@@ -24,6 +24,12 @@ UPLOAD_FOLDER = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "instance")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 engine = create_engine(MYSQL_CONF)
+print("initiating consumer")
+consumer = KafkaConsumer("photo-upload",
+                         group_id="consumer-group",
+                         bootstrap_servers=SERVERS,
+                         value_deserializer=lambda m: json.loads(m.decode('ascii')))
+print("consumer initiated")
 
 
 @app.route("/")
@@ -113,10 +119,11 @@ def brand_metrics():
 
 @app.route("/consume-photos", methods=["GET"])
 def consume_photos():
-    consumer = KafkaConsumer("photo-upload",
-                             group_id="consumer-group",
-                             bootstrap_servers=SERVERS,
-                             value_deserializer=lambda m: json.loads(m.decode('ascii')))
     for message in consumer:
         consumer.commit()
         return json.dumps(message.value)
+
+
+@app.route("/status", methods=["GET"])
+def status():
+    return "OK"
