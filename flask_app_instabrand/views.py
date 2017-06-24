@@ -44,6 +44,11 @@ def dashboard():
                            reach=brand_metrics_result)
 
 
+@app.route("/map")
+def render_map():
+    return render_template("map.html")
+
+
 @app.route('/newsfeed/<username>')
 def user_photos(username):
     timeline = list(helper_methods.get_user_timeline(username, app.session))

@@ -7,7 +7,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+    <link rel="icon" href="static/g12.png">
     <title>Instabrand</title>
 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
@@ -33,54 +33,6 @@
   </head>
 
   <body>
-    <!-- <script type="text/javascript"> -->
-    <!--  setInterval(function() { -->
-    <!--    $.getJSON('/consume-photos', function (data) { -->
-
-    <!--      console.log(data) -->
-
-    <!--    Highcharts.mapChart('container3', { -->
-    <!--      chart: { -->
-    <!--        borderWidth: 1, -->
-    <!--        map: 'custom/world' -->
-    <!--      }, -->
-    <!--      title: { -->
-    <!--        text: 'World population 2013 by country' -->
-    <!--      }, -->
-    <!--      subtitle: { -->
-    <!--        text: 'Demo of Highcharts map with bubbles' -->
-    <!--      }, -->
-    <!--      legend: { -->
-    <!--        enabled: false -->
-    <!--      }, -->
-    <!--      mapNavigation: { -->
-    <!--        enabled: true, -->
-    <!--        buttonOptions: { -->
-    <!--          verticalAlign: 'bottom' -->
-    <!--        } -->
-    <!--      }, -->
-    <!--      series: [{ -->
-    <!--        name: 'Countries', -->
-    <!--        color: '#E0E0E0', -->
-    <!--        enableMouseTracking: false -->
-    <!--      }, { -->
-    <!--        type: 'mapbubble', -->
-    <!--        name: 'Population 2013', -->
-    <!--        joinBy: ['iso-a2', 'code'], -->
-    <!--        data: data, -->
-    <!--        minSize: 4, -->
-    <!--        maxSize: '12%', -->
-    <!--        tooltip: { -->
-    <!--          pointFormat: '{point.code}: {point.z} thousands' -->
-    <!--        } -->
-    <!--      }] -->
-    <!--    }); -->
-    <!--  }); -->
-    <!--  }, 1000); -->
-
-
-    <!-- </script> -->
-
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -91,6 +43,9 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="/">Instabrand</a>
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/map">Map <span class="sr-only">(current)</span></a></li>
+          </ul>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
         </div><!--/.nav-collapse -->
@@ -106,15 +61,11 @@
 
     </div><!-- /.container -->
 
-    <div id="container3" style="height: 500px; min-width: 310px; max-width: 800px; margin: 0 auto"></div>
     <!-- Bootstrap core JavaScript
          ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="static/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="static/js/ie10-viewport-bug-workaround.js"></script>
-    <script src="https://code.highcharts.com/maps/highmaps.js"></script>
-    <script src="https://code.highcharts.com/maps/modules/data.js"></script>
-    <script src="https://code.highcharts.com/mapdata/custom/world.js"></script>
   </body>
 </html>
