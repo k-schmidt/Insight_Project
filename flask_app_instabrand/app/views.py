@@ -8,10 +8,11 @@ from kafka import KafkaProducer
 from kafka.client import SimpleClient
 from kafka.errors import KafkaError
 from kafka.producer import KeyedProducer
+import pymysql
 
 import app
 from app import helper_methods
-from app.config_secure import SERVERS
+from app.config_secure import SERVERS, MYSQL_CONF
 
 
 @app.app.route('/<username>')
@@ -78,6 +79,15 @@ def user_upload(username):
                   value=kafka_message)
     return redirect(url_for('user_photos', username=username))
 
+
+@app.app.route("/top-brands")
+def top_brands():
+    sql_string = "SELECT tags from top_brands order by count(1), tags"
+    mysql_session = pymysql.connect(MYSQL_CONF)
+    with mysql_session.cursor() as cursor:
+        cursor.execute(sql_string)
+        result = cursor.fetchall()
+    print(result)
 
 # This is a jinja custom filter
 @app.app.template_filter('strftime')
