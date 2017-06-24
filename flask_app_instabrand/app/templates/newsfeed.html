@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="starter-template">
+
+  <form action="/handle-post/{{ username }}" method="POST"" enctype="multipart/form-data">
+    <div class="form-group">
+      <input type="text" class="form-control" name="username" placeholder="Username">
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-control" name="tags" placeholder="Tags">
+    </div>
+    <div class="form-group">
+      <label for="exampleInputFile">File input</label>
+      <input type="file" id="filename" name="filename">
+      <p class="help-block">Upload your photo to Instabrand!</p>
+    </div>
+    <button type="submit" class="btn btn-default">Submit</button>
+  </form>
+
+<br>
+{% for m in media %}
+
+<p class="lead">
+  <img src="{{m.photo_link}}" alt="{{m.photo_link}}" class="img-rounded" width="304" height="236">
+  <br>
+  {% if m.photo_tags %}
+  <ul class="list-inline">
+    {% for tag in m.g_tags if m.g_tags %}
+    <li>{{ tag }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% if m.g_comments %}
+  {% for comment in m.g_comments if m.g_comments %}
+  <d1 class="d1-horizontal">
+    <dt>{{ comment[0] }}</dt>
+    <dd>{{ comment[1] }}</dd>
+  </d1>
+  {% endfor %}
+  {% endif %}
+  <br>
+</p>
+
+{% endfor %}
+{% endblock %}

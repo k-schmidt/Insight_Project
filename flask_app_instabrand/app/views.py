@@ -3,12 +3,14 @@ import json
 import os
 
 import boto3
-from flask import render_template, url_for, request, redirect
+from flask import jsonify, render_template, url_for, request, redirect
 from kafka import KafkaProducer
 from kafka.client import SimpleClient
 from kafka.errors import KafkaError
 from kafka.producer import KeyedProducer
+from kafka import KafkaConsumer
 import pymysql
+import simplejson as sj
 from sqlalchemy import create_engine
 
 import app
@@ -21,13 +23,14 @@ engine = create_engine(MYSQL_CONF)
 
 @app.app.route("/")
 def dashboard():
-    sql_string = "SELECT tags, cnt from top_brands where tags is not NULL order by cnt desc, tags limit 10"
-    brand_result = engine.execute(sql_string).fetchall()
+    brand_result = helper_methods.get_top_brands(engine)
+    influencer_result = helper_methods.get_top_influencers(engine)
+    brand_metrics_result = helper_methods.get_brand_metrics(engine)
 
-    influencer_string = "SELECT username, frequency from recent_influencers order by frequency desc, username limit 10"
-    influencer_result = engine.execute(influencer_string).fetchall()
-
-    return render_template("main_dashboard.html", tags=brand_result, people=influencer_result)
+    return render_template("main_dashboard.html",
+                           tags=brand_result,
+                           people=influencer_result,
+                           reach=brand_metrics_result)
 
 
 @app.app.route('/newsfeed/<username>')
@@ -35,11 +38,9 @@ def user_photos(username):
     timeline = list(helper_methods.get_user_timeline(username, app.session))
 
     templateData = {
-        'size' : "big",  # request.args.get('size','thumb'),
-        'media' : timeline,  # recent_media
+        'media' : timeline,
         "username": username
     }
-    print(timeline)
 
     return render_template('newsfeed.html', **templateData)
 
@@ -96,8 +97,21 @@ def user_upload(username):
     return redirect(url_for('user_photos', username=username))
 
 
-# This is a jinja custom filter
-@app.app.template_filter('strftime')
-def _jinja2_filter_datetime(date, fmt=None):
-    pyDate = time.strptime(date,'%a %b %d %H:%M:%S +0000 %Y') # convert instagram date string into python date/time
-    return time.strftime('%Y-%m-%d %h:%M:%S', pyDate) # return the formatted date.
+@app.app.route("/brand-metrics", methods=["GET"])
+def brand_metrics():
+    column_names = ["Tag", "Reach", "Comment Frequency",
+                    "Like Frequency", "Comment Rate", "Like Rate",
+                    "Engagement Rate"]
+    result = [dict(zip(column_names, row)) for row in helper_methods.get_brand_metrics(engine)]
+    return sj.dumps(result, use_decimal=True)
+
+
+@app.app.route("/consume-photos", methods=["GET"])
+def consume_photos():
+    consumer = KafkaConsumer("photo-upload",
+                             group_id="consumer-group",
+                             bootstrap_servers=SERVERS,
+                             value_deserializer=lambda m: json.loads(m.decode('ascii')))
+    for message in consumer:
+        consumer.commit()
+        return json.dumps(message.value)
