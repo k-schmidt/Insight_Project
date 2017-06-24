@@ -6,7 +6,7 @@ Photo Upload Kafka Producer
 """
 import json
 import random
-from typing import Dict, List, Tuple
+from typing import Deque, Dict, List, Tuple
 
 from kafka.producer import KeyedProducer
 
@@ -14,7 +14,7 @@ from helper_functions import get_datetime
 
 
 def create_photo_producer(users: List[Tuple[str]],
-                          photos: List[Tuple[str, str]],
+                          photos: Deque[Tuple[str, str]],
                           tags: List[Tuple[str]],
                           locations: List[Tuple[str, str]],
                           producer: KeyedProducer) -> Dict[str, str]:

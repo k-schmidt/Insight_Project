@@ -6,7 +6,7 @@ Comment Kafka Producer
 """
 import json
 import random
-from typing import Dict, List, Optional, Tuple
+from typing import Deque, Dict, List, Optional, Tuple
 
 from faker import Factory
 from kafka.producer import KeyedProducer
@@ -26,7 +26,7 @@ def get_text() -> str:
 
 
 def comment_producer(users: List[Tuple[str]],
-                     photos: List[Tuple[str, str]],
+                     photos: Deque[Tuple[str, str]],
                      tags: List[Tuple[str]],
                      locations: List[Tuple[str, str]],
                      producer: KeyedProducer) -> Optional[Dict[str, str]]:

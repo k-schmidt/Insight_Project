@@ -8,7 +8,7 @@ from collections import deque
 from multiprocessing import Process
 import random
 import time
-from typing import List, Tuple
+from typing import Deque, List, Tuple
 
 from kafka.client import SimpleClient
 from kafka.producer import KeyedProducer

@@ -7,7 +7,7 @@ Create User Kafka Producer
 import json
 import random
 import re
-from typing import Dict, List, Tuple
+from typing import Deque, Dict, List, Tuple
 
 from faker import Faker
 from kafka.producer import KeyedProducer
@@ -48,7 +48,7 @@ def fake_user() -> Tuple[str, str]:
 
 
 def create_user_producer(users: List[Tuple[str]],
-                         photos: List[Tuple[str, str]],
+                         photos: Deque[Tuple[str, str]],
                          tags: List[Tuple[str]],
                          locations: List[Tuple[str, str]],
                          producer: KeyedProducer) -> Dict[str, str]:
