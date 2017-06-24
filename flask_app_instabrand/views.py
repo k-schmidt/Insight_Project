@@ -18,6 +18,11 @@ from app import helper_methods
 from app.config_secure import SERVERS, MYSQL_CONF
 
 
+app = Flask(__name__)   # pylint: disable=invalid-name
+session = Cluster(CASSANDRA_CLUSTER).connect("instabrand")  # pylint: disable=invalid-name
+UPLOAD_FOLDER = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "instance")
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 engine = create_engine(MYSQL_CONF)
 
 
