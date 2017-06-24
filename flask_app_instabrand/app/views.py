@@ -9,13 +9,28 @@ from kafka.client import SimpleClient
 from kafka.errors import KafkaError
 from kafka.producer import KeyedProducer
 import pymysql
+from sqlalchemy import create_engine
 
 import app
 from app import helper_methods
 from app.config_secure import SERVERS, MYSQL_CONF
 
 
-@app.app.route('/<username>')
+engine = create_engine(MYSQL_CONF)
+
+
+@app.app.route("/")
+def dashboard():
+    sql_string = "SELECT tags, cnt from top_brands where tags is not NULL order by cnt desc, tags limit 10"
+    brand_result = engine.execute(sql_string).fetchall()
+
+    influencer_string = "SELECT username, frequency from recent_influencers order by frequency desc, username limit 10"
+    influencer_result = engine.execute(influencer_string).fetchall()
+
+    return render_template("main_dashboard.html", tags=brand_result, people=influencer_result)
+
+
+@app.app.route('/newsfeed/<username>')
 def user_photos(username):
     timeline = list(helper_methods.get_user_timeline(username, app.session))
 
@@ -24,8 +39,9 @@ def user_photos(username):
         'media' : timeline,  # recent_media
         "username": username
     }
+    print(timeline)
 
-    return render_template('base.html', **templateData)
+    return render_template('newsfeed.html', **templateData)
 
 
 @app.app.errorhandler(404)
@@ -79,15 +95,6 @@ def user_upload(username):
                   value=kafka_message)
     return redirect(url_for('user_photos', username=username))
 
-
-@app.app.route("/top-brands")
-def top_brands():
-    sql_string = "SELECT tags from top_brands order by count(1), tags"
-    mysql_session = pymysql.connect(MYSQL_CONF)
-    with mysql_session.cursor() as cursor:
-        cursor.execute(sql_string)
-        result = cursor.fetchall()
-    print(result)
 
 # This is a jinja custom filter
 @app.app.template_filter('strftime')

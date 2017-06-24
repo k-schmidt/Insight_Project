@@ -1,4 +1,4 @@
-# Instabrand - Brand Spankin' New
+# Instabrand - Measuring Organic Brand Reach through Social Media Photos
 By: <kyle.a.schmidt@gmail.com>
 
 An Insight Data Engineering Fellowship personal project.

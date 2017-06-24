@@ -4,41 +4,54 @@ Kyle Schmidt
 
 Comment Kafka Producer
 """
-from datetime import datetime
 import json
 import random
-import string
+from typing import Dict, List, Optional, Tuple
 
 from faker import Factory
+from kafka.producer import KeyedProducer
+
+from helper_functions import get_datetime
 
 
-def get_datetime():
-    datetime_obj = datetime.now()
-    return datetime_obj.strftime("%Y-%m-%d %H:%M:%S"), datetime_obj.strftime("%Y-%m-%d")
+def get_text() -> str:
+    """
+    Generate random comments in latin
 
-
-def get_text():
+    Returns:
+        Fake latin sentence
+    """
     fake = Factory.create()
     return fake.sentence()
 
 
-def query_photos(user, cassandra_session):
-    cql_string = "SELECT photo_id from user_status_updates where username = '{}';"\
-        .format(user)
-    result = list(cassandra_session.execute(cql_string))
-    photo = random.choice(result) if result else None
-    return photo
+def comment_producer(users: List[Tuple[str]],
+                     photos: List[Tuple[str, str]],
+                     tags: List[Tuple[str]],
+                     locations: List[Tuple[str, str]],
+                     producer: KeyedProducer) -> Optional[Dict[str, str]]:
+    """
+    Produce comment events to Kafka
 
+    Arguments:
+        users: List of users who can produce an event
+        photos: Queue of recent photos and their usernames
+        tags: List of company names
+        locations: List of possible global lat/long coordinates
+        producer: Kafka producer object to post messages
 
-def comment_producer(servers, users, photos, tags, locations, producer):
-    if len(photos) == 0:
+    Returns:
+        Kafka message
+    """
+    if not photos:
         return
     follower = random.choice(users)[0]
     photo, followee = random.choice(photos)
     text = get_text()
     created_time, partition_date = get_datetime()
 
-    if not all([photo, follower, followee]): return
+    if not all([photo, follower, followee]):
+        return
     record = {
         "follower_username": follower,
         "followed_username": followee,

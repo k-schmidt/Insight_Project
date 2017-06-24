@@ -9,8 +9,9 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
-
-    <title>Starter Template for Bootstrap</title>
+    <script src="http://d3js.org/topojson.v0.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <title>Instabrand</title>
 
     <!-- Bootstrap core CSS -->
     <link href="../static/css/bootstrap.min.css" rel="stylesheet">
@@ -43,66 +44,46 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Instabrand</a>
+          <a class="navbar-brand" href="/">Instabrand</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#contact">Dashboard</a></li>
-          </ul>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
 
     <div class="container">
 
-      <div class="starter-template">
+      <br>
 
-        <form action="/handle-post/{{ username }}" method="POST"" enctype="multipart/form-data">
-          <div class="form-group">
-            <input type="text" class="form-control" name="username" placeholder="Username">
-          </div>
-          <div class="form-group">
-            <input type="text" class="form-control" name="tags" placeholder="Tags">
-          </div>
-          <div class="form-group">
-            <label for="exampleInputFile">File input</label>
-            <input type="file" id="filename" name="filename">
-            <p class="help-block">Upload your photo to Instabrand!</p>
-          </div>
-          <button type="submit" class="btn btn-default">Submit</button>
-        </form>
-
-        <br>
-
-        {% for m in media %}
-
-        <p class="lead">
-          <img src="{{m.photo_link}}" alt="{{m.photo_link}}" class="img-rounded" width="304" height="236">
-          <br>
-          {% if m.photo_tags %}
-          <ul class="list-inline">
-            {% for tag in m.g_tags if m.g_tags %}
-            <li>{{ tag }}</li>
-            {% endfor %}
-          </ul>
-          {% endif %}
-          {% if m.g_comments %}
-          {% for comment in m.g_comments if m.g_comments %}
-          <d1 class="d1-horizontal">
-            <dt>{{ comment[0] }}</dt>
-            <dd>{{ comment[1] }}</dd>
-          </d1>
-          {% endfor %}
-          {% endif %}
-          <br>
-        </p>
-
-        {% endfor %}
-
-      </div>
+      {% block content %}
+      {% endblock %}
 
     </div><!-- /.container -->
+    <div id="map"></div>
+    <script type="text/javascript">
+     var width = 900;
+     var height = 600;
+
+     var projection = d3.geo.mercator();
+
+     var svg=d3.select("body")
+               .select("#map")
+               .append("svg")
+               .attr("width", width)
+               .attr("height", height);
+     var path = d3.geo.path()
+                  .projection(projection);
+     var g = svg.append("g");
+
+     d3.json("world-110m2.json", function(error, topology) {
+       g.selectAll("path")
+        .data(topojson.object(topology, topology.objects.countries)
+                      .geometries)
+        .enter()
+        .append("path")
+        .attr("d", path)
+     });
+    </script>
 
 
     <!-- Bootstrap core JavaScript

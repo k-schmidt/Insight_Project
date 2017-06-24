@@ -1,3 +1,9 @@
+"""
+Insight Data Engineering
+Kyle Schmidt
+
+Main entry for the flask application
+"""
 from app import app
 
 
