@@ -3,7 +3,8 @@ import json
 import os
 
 import boto3
-from flask import jsonify, render_template, url_for, request, redirect
+from cassandra.cluster import Cluster  # pylint: disable=no-name-in-module
+from flask import jsonify, render_template, url_for, request, redirect, Flask
 from kafka import KafkaProducer
 from kafka.client import SimpleClient
 from kafka.errors import KafkaError
@@ -13,9 +14,8 @@ import pymysql
 import simplejson as sj
 from sqlalchemy import create_engine
 
-import app
-from app import helper_methods
-from app.config_secure import SERVERS, MYSQL_CONF
+import helper_methods
+from config_secure import SERVERS, MYSQL_CONF, CASSANDRA_CLUSTER
 
 
 app = Flask(__name__)   # pylint: disable=invalid-name
@@ -26,7 +26,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 engine = create_engine(MYSQL_CONF)
 
 
-@app.app.route("/")
+@app.route("/")
 def dashboard():
     brand_result = helper_methods.get_top_brands(engine)
     influencer_result = helper_methods.get_top_influencers(engine)
@@ -38,7 +38,7 @@ def dashboard():
                            reach=brand_metrics_result)
 
 
-@app.app.route('/newsfeed/<username>')
+@app.route('/newsfeed/<username>')
 def user_photos(username):
     timeline = list(helper_methods.get_user_timeline(username, app.session))
 
@@ -50,12 +50,12 @@ def user_photos(username):
     return render_template('newsfeed.html', **templateData)
 
 
-@app.app.errorhandler(404)
+@app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
 
 
-@app.app.route("/handle-post/<username>", methods=["POST"])
+@app.route("/handle-post/<username>", methods=["POST"])
 def user_upload(username):
     username = request.form["username"]
     tags = request.form["tags"].split(",")
@@ -102,7 +102,7 @@ def user_upload(username):
     return redirect(url_for('user_photos', username=username))
 
 
-@app.app.route("/brand-metrics", methods=["GET"])
+@app.route("/brand-metrics", methods=["GET"])
 def brand_metrics():
     column_names = ["Tag", "Reach", "Comment Frequency",
                     "Like Frequency", "Comment Rate", "Like Rate",
@@ -111,7 +111,7 @@ def brand_metrics():
     return sj.dumps(result, use_decimal=True)
 
 
-@app.app.route("/consume-photos", methods=["GET"])
+@app.route("/consume-photos", methods=["GET"])
 def consume_photos():
     consumer = KafkaConsumer("photo-upload",
                              group_id="consumer-group",

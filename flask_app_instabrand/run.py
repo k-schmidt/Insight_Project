@@ -4,7 +4,7 @@ Kyle Schmidt
 
 Main entry for the flask application
 """
-from app import app
+from views import app
 
 
 if __name__ == "__main__":
