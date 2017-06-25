@@ -1,11 +1,10 @@
-from datetime import datetime
 import json
 import os
 
 from cassandra.cluster import Cluster  # pylint: disable=no-name-in-module
-from flask import jsonify, render_template, url_for, request, redirect, Flask
+from flask import render_template, Flask
 from kafka import KafkaConsumer
-import pymysql
+import pymysql  # pylint: disable=unused-import
 import simplejson as sj
 from sqlalchemy import create_engine
 
@@ -17,9 +16,9 @@ app = Flask(__name__)   # pylint: disable=invalid-name
 session = Cluster(CASSANDRA_CLUSTER).connect("instabrand")  # pylint: disable=invalid-name
 UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "instance")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-engine = create_engine(MYSQL_CONF)
+engine = create_engine(MYSQL_CONF)  # pylint: disable=invalid-name
 print("initiating kafka")
-consumer = KafkaConsumer("photo-upload",
+consumer = KafkaConsumer("photo-upload",  # pylint: disable=invalid-name
                          group_id="consumer-group",
                          bootstrap_servers=SERVERS,
                          value_deserializer=lambda m: json.loads(m.decode('ascii')))
