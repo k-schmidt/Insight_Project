@@ -66,7 +66,7 @@ object ProcessStreams {
       "photo-upload" -> 1)
 
     val eventsStream: DStream[String] = KafkaUtils.createStream(ssc, zkQuorum, "events", topics).map(_._2)
-//    eventsStream.foreachRDD(processTopLevelEvents(_, keyspace, sparkSession))
+    eventsStream.foreachRDD(processTopLevelEvents(_, keyspace, sparkSession))
 
     val influencerStream: DStream[String] = eventsStream.window(Seconds(360), Seconds(90))
     influencerStream.foreachRDD(processAggregates(_, keyspace, sparkSession, jdbcUrl, mysqlUser, mysqlPassword))
