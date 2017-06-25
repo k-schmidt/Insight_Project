@@ -2,13 +2,8 @@ from datetime import datetime
 import json
 import os
 
-import boto3
 from cassandra.cluster import Cluster  # pylint: disable=no-name-in-module
 from flask import jsonify, render_template, url_for, request, redirect, Flask
-from kafka import KafkaProducer
-from kafka.client import SimpleClient
-from kafka.errors import KafkaError
-from kafka.producer import KeyedProducer
 from kafka import KafkaConsumer
 import pymysql
 import simplejson as sj
@@ -20,16 +15,15 @@ from config_secure import SERVERS, MYSQL_CONF, CASSANDRA_CLUSTER
 
 app = Flask(__name__)   # pylint: disable=invalid-name
 session = Cluster(CASSANDRA_CLUSTER).connect("instabrand")  # pylint: disable=invalid-name
-UPLOAD_FOLDER = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "instance")
+UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "instance")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 engine = create_engine(MYSQL_CONF)
-print("initiating consumer")
+print("initiating kafka")
 consumer = KafkaConsumer("photo-upload",
                          group_id="consumer-group",
                          bootstrap_servers=SERVERS,
                          value_deserializer=lambda m: json.loads(m.decode('ascii')))
-print("consumer initiated")
+print("kafka initiated")
 
 
 @app.route("/")
@@ -49,10 +43,11 @@ def render_map():
     return render_template("map.html")
 
 
-@app.route('/newsfeed/<username>')
+@app.route('/<username>')
 def user_photos(username):
-    timeline = list(helper_methods.get_user_timeline(username, app.session))
+    timeline = list(helper_methods.get_user_timeline(username, session))
 
+    print(timeline)
     templateData = {
         'media' : timeline,
         "username": username
@@ -64,53 +59,6 @@ def user_photos(username):
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
-
-
-@app.route("/handle-post/<username>", methods=["POST"])
-def user_upload(username):
-    username = request.form["username"]
-    tags = request.form["tags"].split(",")
-    upload_file = request.files["filename"]
-    date_today = datetime.now().strftime("%Y-%m-%d %H%M%S.%f")
-
-    print(username, tags, upload_file)
-
-    local_file_path = os.path.join(app.app.config["UPLOAD_FOLDER"], upload_file.filename)
-    upload_file.save(local_file_path)
-
-    s3_bucket = "instabrand-assets"
-    s3_name = f"{username}/{date_today}"
-
-    s3 = boto3.resource('s3')
-    s3.meta.client.upload_file(local_file_path,
-                               s3_bucket,
-                               s3_name)
-    url = boto3.client('s3').generate_presigned_url(
-        ClientMethod='get_object',
-        Params={
-            "Bucket": s3_bucket,
-            "Key": s3_name
-        }
-    )
-    object_acl = s3.ObjectAcl(s3_bucket, s3_name)
-    response = object_acl.put(ACL='public-read')
-
-    kafka_message = {
-        "username": username,
-        "tags": tags,
-        "photo_link": url,
-        "created_time": date_today,
-        "latitude": "40.7128",
-        "longitude": "74.0059",
-        "event": "photo-upload"
-    }
-
-    producer = KafkaProducer(bootstrap_servers=SERVERS,
-                             value_serializer=lambda m: json.dumps(m).encode('utf-8'))
-    producer.send("photo-upload",
-                  key=bytes(username, "utf-8"),
-                  value=kafka_message)
-    return redirect(url_for('user_photos', username=username))
 
 
 @app.route("/brand-metrics", methods=["GET"])
@@ -127,8 +75,3 @@ def consume_photos():
     for message in consumer:
         consumer.commit()
         return json.dumps(message.value)
-
-
-@app.route("/status", methods=["GET"])
-def status():
-    return "OK"

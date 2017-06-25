@@ -17,10 +17,10 @@ def get_user_timeline(user, db_session):
 
 def get_top_brands(mysql_engine):
     sql_string = """
-    SELECT tags, cnt
+    SELECT tag, frequency
     from top_brands
-    where tags is not NULL
-    order by cnt desc, tags limit 20"""
+    where tag is not NULL
+    order by frequency desc, tag limit 20"""
     brand_result = mysql_engine.execute(sql_string).fetchall()
     return brand_result
 

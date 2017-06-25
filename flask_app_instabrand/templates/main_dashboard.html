@@ -39,7 +39,7 @@
             <tbody>
               {% for influencer, frequency in people %}
               <tr>
-                <td>{{ influencer}}</td>
+                <td><button class="btn"><a href={{ "%s"|format(influencer) }}>{{ influencer}}</a></button></td>
                 <td>{{ frequency }}</td>
               </tr>
               {% endfor %}
@@ -55,9 +55,9 @@
   <thead>
     <tr>
       <th>Brand Name</th>
-      <th>Reach</th>
-      <th>Comments</th>
-      <th>Likes</th>
+      <th>Unique Reach</th>
+      <th>Unique Comments</th>
+      <th>Unique Likes</th>
       <th>Comment Rate</th>
       <th>Like Rate</th>
       <th>Engagement Rate</th>
@@ -70,9 +70,9 @@
       <td>{{ reach }}</td>
       <td>{{ comment }}</td>
       <td>{{ like }}</td>
-      <td>{{ comment_rate }}</td>
-      <td>{{ like_rate }}</td>
-      <td>{{ engagement_rate }}</td>
+      <td>{{ "%.2f" % comment_rate }}%</td>
+      <td>{{ "%.2f" % like_rate }}%</td>
+      <td>{{ "%.2f" % engagement_rate }}%</td>
     </tr>
     {% endfor %}
   </tbody>

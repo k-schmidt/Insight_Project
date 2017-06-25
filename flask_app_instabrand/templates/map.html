@@ -1,5 +1,6 @@
 <head>
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <link rel="icon" href="static/g12.png">
   <style>
    /* Always set the map height explicitly to define the size of the div
     * element that contains the map. */
@@ -45,11 +46,12 @@
      }
    }
 
-   function addmarker(latilongi) {
+   function addmarker(data) {
+     var latLng = new google.maps.LatLng(data.latitude, data.longitude);
      var marker = new google.maps.Marker({
-       position: latilongi,
-       title: 'new marker',
-       draggable: true,
+       position: latLng,
+       title: [data.username, data.tags, data.photo_link].join("\n"),
+       draggable: false,
        map: map
      });
      map.setCenter(marker.getPosition())
@@ -57,8 +59,7 @@
 
    setInterval(function () {
      $.getJSON('/consume-photos', function( data ) {
-       var latLng = new google.maps.LatLng(data.latitude, data.longitude);
-       addmarker(latLng)
+       addmarker(data)
      })
    }, 5000);
   </script>
