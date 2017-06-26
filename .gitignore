@@ -15,5 +15,6 @@ spark/ProcessTopics/.idea/*
 spark/ProcessTopics/project/project/*
 spark/ProcessTopics/project/target/*
 spark/ProcessTopics/target/*
+spark/run_spark.sh
 flask_app_instabrand/instance/*.png
 flask_app_instabrand/instance/*.jpg
