@@ -12,7 +12,7 @@ from typing import Deque, Dict, List, Tuple
 from faker import Faker
 from kafka.producer import KeyedProducer
 
-from helper_functions import get_datetime
+from pkg.helper_functions import get_datetime
 
 
 def remove_non_alpha_chars(string: str) -> str:

@@ -14,8 +14,8 @@ from kafka.client import SimpleClient
 from kafka.producer import KeyedProducer
 import pymysql
 
+from config_secure import SERVERS, MYSQL_CONF
 from pkg.comment import comment_producer
-from pkg.config_secure import SERVERS, MYSQL_CONF
 from pkg.create_user import create_user_producer
 from pkg.follow import follow_producer
 from pkg.like import like_producer
@@ -97,7 +97,7 @@ def main(servers: List[str]) -> None:
     mysql_session = pymysql.connect(**MYSQL_CONF)
 
     users = query_for_users(mysql_session)
-    photos = deque([], maxlen=100)
+    photos = deque([], maxlen=3000)
     tags = query_for_tags(mysql_session)
     locations = query_for_locations(mysql_session)
 

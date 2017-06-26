@@ -10,7 +10,7 @@ from typing import Deque, Dict, List, Tuple
 
 from kafka.producer import KeyedProducer
 
-from helper_functions import get_datetime
+from pkg.helper_functions import get_datetime
 
 
 def follow_producer(users: List[Tuple[str]],

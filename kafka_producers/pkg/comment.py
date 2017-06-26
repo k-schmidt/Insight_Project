@@ -11,7 +11,7 @@ from typing import Deque, Dict, List, Optional, Tuple
 from faker import Factory
 from kafka.producer import KeyedProducer
 
-from helper_functions import get_datetime
+from pkg.helper_functions import get_datetime
 
 
 def get_text() -> str:
