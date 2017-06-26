@@ -4,9 +4,11 @@ Kyle Schmidt
 
 Endpoint helpers
 """
+from cassandra.cluster import Cluster  # pylint: disable=no-name-in-module
+from sqlalchemy.engine.interfaces import Dialect  # type: ignore
 
 
-def get_user_timeline(user, db_session):
+def get_user_timeline(user: str, db_session: Cluster):
     """
     Retrieve the 20 most recent photos from a user's timeline
 
@@ -27,7 +29,7 @@ def get_user_timeline(user, db_session):
     return timeline
 
 
-def get_top_brands(mysql_engine):
+def get_top_brands(mysql_engine: Dialect):
     """
     Retrieve 20 top brands from database
 
@@ -48,7 +50,7 @@ def get_top_brands(mysql_engine):
     return brand_result
 
 
-def get_top_influencers(mysql_engine):
+def get_top_influencers(mysql_engine: Dialect):
     """
     Retrieve top 20 recent influencers
 
@@ -68,7 +70,7 @@ def get_top_influencers(mysql_engine):
     influencer_result = mysql_engine.execute(influencer_string).fetchall()
     return influencer_result
 
-def get_brand_metrics(mysql_engine):
+def get_brand_metrics(mysql_engine: Dialect):
     """
     Retrieve brand engagement metrics ordered by engagement rate
 
