@@ -11,7 +11,7 @@ from typing import Deque, Dict, List, Optional, Tuple
 from faker import Factory
 from kafka.producer import KeyedProducer
 
-from helper_functions import get_datetime
+from pkg.helper_functions import get_datetime
 
 
 def get_text() -> str:
@@ -44,14 +44,14 @@ def comment_producer(users: List[Tuple[str]],
         Kafka message
     """
     if not photos:
-        return
+        return None
     follower = random.choice(users)[0]
     photo, followee = random.choice(photos)
     text = get_text()
     created_time, partition_date = get_datetime()
 
     if not all([photo, follower, followee]):
-        return
+        return None
     record = {
         "follower_username": follower,
         "followed_username": followee,
