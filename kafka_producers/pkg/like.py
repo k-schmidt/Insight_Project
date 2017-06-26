@@ -32,7 +32,7 @@ def like_producer(users: List[Tuple[str]],
         Kafka message
     """
     if not photos:
-        return
+        return None
     follower = random.choice(users)[0]
     photo, followee = random.choice(photos)
     created_time, partition_date = get_datetime()

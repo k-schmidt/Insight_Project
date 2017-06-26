@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="row-fluid">
+    <div class="col-xs-6">
+      <div class="table-responsive">
+        <div class="panel-heading">Top Trending Brands</div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Brand Name</th>
+              <th>Frequency</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for brand, frequency in tags %}
+            <tr>
+              <td>{{ brand }}</td>
+              <td>{{ frequency}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          </thead>
+        </table>
+      </div>
+    </div>
+    <div class="col-xs-6">
+      <div class="table-responsive">
+        <div class="panel-heading">Top Trending Influencers</div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Influencer Name</th>
+              <th>Frequency</th>
+            </tr>
+          </thead>
+          <thead>
+            <tbody>
+              {% for influencer, frequency in people %}
+              <tr>
+                <td><button class="btn"><a href={{ "%s"|format(influencer) }}>{{ influencer}}</a></button></td>
+                <td>{{ frequency }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </thead>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Brand Name</th>
+      <th>Unique Reach</th>
+      <th>Unique Comments</th>
+      <th>Unique Likes</th>
+      <th>Comment Rate</th>
+      <th>Like Rate</th>
+      <th>Engagement Rate</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for brand, reach, comment, like, comment_rate, like_rate, engagement_rate in reach %}
+    <tr>
+      <td>{{ brand }}</td>
+      <td>{{ reach }}</td>
+      <td>{{ comment }}</td>
+      <td>{{ like }}</td>
+      <td>{{ "%.2f" % comment_rate }}%</td>
+      <td>{{ "%.2f" % like_rate }}%</td>
+      <td>{{ "%.2f" % engagement_rate }}%</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

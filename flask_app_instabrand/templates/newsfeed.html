@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="starter-template">
+
+{% for m in media %}
+{% if m.photo_link %}
+<p class="lead">
+  <img src="{{m.photo_link}}" alt="{{m.photo_link}}" class="img-rounded" width="304" height="236">
+  <br>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Photo Username</th>
+        <th>Photo Tag</th>
+      </tr>
+    </thead>
+    <thead>
+      <tbody>
+        <tr align="left">
+          <td><button class="btn"><a href={{ m.photo_username }}>{{ m.photo_username }}</a></button></td>
+          <td>{{ m.g_tags }}</td>
+        </tr>
+      </tbody>
+    </thead>
+  </table>
+  <br>
+  {% if m.g_likes %}
+  <button class="btn btn-primary" type="button" data-toggle="tooltip" data-placement="right" title={{ m.g_likes|join(",") }}>
+    Likes <span class="badge">{{ m.g_likes|length }}</span>
+  </button>
+  <br>
+  {% endif %}
+  {% if m.g_comments %}
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Comment</th>
+      </tr>
+    </thead>
+    <thead>
+      <tbody>
+        {% for comment in m.g_comments if m.g_comments %}
+        <tr align="left">
+          <td><button class="btn"><a href={{ comment[0] }}>{{ comment[0] }}</a></button></td>
+          <td>{{ comment[1] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </thead>
+  </table>
+  {% endif %}
+  <br>
+</p>
+{% endif %}
+
+{% endfor %}
+{% endblock %}

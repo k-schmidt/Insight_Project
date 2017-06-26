@@ -1,0 +1,69 @@
+<head>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <link rel="icon" href="static/g12.png">
+  <style>
+   /* Always set the map height explicitly to define the size of the div
+    * element that contains the map. */
+   #map {
+     height: 100%;
+   }
+   /* Optional: Makes the sample page fill the window. */
+   html, body {
+     height: 100%;
+     margin: 0;
+     padding: 0;
+   }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <!-- Replace the value of the key parameter with your own API key. -->
+  <script>
+   var map;
+   var markers = [];
+   function initMap() {
+     map = new google.maps.Map(document.getElementById('map'), {
+       zoom: 2,
+       center: new google.maps.LatLng(2.8,-187.3),
+       mapTypeId: 'terrain'
+     });
+
+     // Create a <script> tag and set the USGS URL as the source.
+     var script = document.createElement('script');
+     document.getElementsByTagName('head')[0].appendChild(script);
+   }
+
+   // Loop through the results array and place a marker for each
+   // set of coordinates.
+   window.eqfeed_callback = function(results) {
+     for (var i = 0; i < results.features.length; i++) {
+       var coords = results.features[i].geometry.coordinates;
+       var latLng = new google.maps.LatLng(coords[1],coords[0]);
+       var marker = new google.maps.Marker({
+         position: latLng,
+         map: map
+       });
+     }
+   }
+
+   function addmarker(data) {
+     var latLng = new google.maps.LatLng(data.latitude, data.longitude);
+     var marker = new google.maps.Marker({
+       position: latLng,
+       title: [data.username, data.tags, data.photo_link].join("\n"),
+       draggable: false,
+       map: map
+     });
+     map.setCenter(marker.getPosition())
+   }
+
+   setInterval(function () {
+     $.getJSON('/consume-photos', function( data ) {
+       addmarker(data)
+     })
+   }, 5000);
+  </script>
+</body>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCyZlN647cWhx2dBpPb2YmAGedzH5ZjrX0&callback=initMap">
+</script>
