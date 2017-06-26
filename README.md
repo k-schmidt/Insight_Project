@@ -1,4 +1,4 @@
-# Instabrand - Measuring Organic Brand Reach through Social Media Photos
+# [Instabrand](www.instabrand.tech) - Measuring Organic Brand Reach through Social Media Photos
 By: <kyle.a.schmidt@gmail.com>
 
 An Insight Data Engineering Fellowship personal project.
@@ -79,7 +79,7 @@ The pipiline is centered around six events:
     "followed_username": "billyjoel219",
     "follower_username": "neildiamond54",
     "created_time": "2017-06-22 19:42:07",
-    "event": "follow"
+    "event": "unfollow"
 }
 ```
 
