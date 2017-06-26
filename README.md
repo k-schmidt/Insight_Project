@@ -90,4 +90,4 @@ Aggregations are performed in Spark as well as the logic ensuring a user's timel
 The aggregations are then loaded into [MySQL](https://www.mysql.com/) while the raw events are publicized using [Cassandra](http://cassandra.apache.org/).
 
 ## Diagram
-![Process Diagram](./notes/Process_Diagram.jpg)
+![Process Diagram](./Process_Diagram.jpg)
