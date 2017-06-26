@@ -16,7 +16,7 @@ import pymysql
 
 from pkg.comment import comment_producer
 from pkg.config_secure import SERVERS, MYSQL_CONF
-from pkg.create_user import create_user_producer
+from pkg.create_user import create_user_producer  # pylint: disable=unused-import
 from pkg.follow import follow_producer
 from pkg.like import like_producer
 from pkg.photo_upload import create_photo_producer
@@ -97,7 +97,7 @@ def main(servers: List[str]) -> None:
     mysql_session = pymysql.connect(**MYSQL_CONF)
 
     users = query_for_users(mysql_session)
-    photos = deque([], maxlen=100)
+    photos: Deque = deque([], maxlen=3000)
     tags = query_for_tags(mysql_session)
     locations = query_for_locations(mysql_session)
 
@@ -119,7 +119,7 @@ def main(servers: List[str]) -> None:
         time.sleep(0.02)
 
 if __name__ == '__main__':
-    p1 = Process(target=main, args=(SERVERS,))
+    p1 = Process(target=main, args=(SERVERS,))  # pylint: disable=invalid-name
     p1.start()
-    p2 = Process(target=main, args=(SERVERS,))
+    p2 = Process(target=main, args=(SERVERS,))  # pylint: disable=invalid-name
     p2.start()

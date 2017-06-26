@@ -1,4 +1,4 @@
-# Instabrand - Measuring Organic Brand Reach through Social Media Photos
+# [Instabrand](http://instabrand.tech) - Measuring Organic Brand Reach through Social Media Photos
 By: <kyle.a.schmidt@gmail.com>
 
 An Insight Data Engineering Fellowship personal project.
@@ -79,7 +79,7 @@ The pipiline is centered around six events:
     "followed_username": "billyjoel219",
     "follower_username": "neildiamond54",
     "created_time": "2017-06-22 19:42:07",
-    "event": "follow"
+    "event": "unfollow"
 }
 ```
 
@@ -90,4 +90,4 @@ Aggregations are performed in Spark as well as the logic ensuring a user's timel
 The aggregations are then loaded into [MySQL](https://www.mysql.com/) while the raw events are publicized using [Cassandra](http://cassandra.apache.org/).
 
 ## Diagram
-![Process Diagram](./notes/Process_Diagram.jpg)
+![Process Diagram](./Process_Diagram.jpg)

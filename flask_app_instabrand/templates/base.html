@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -8,23 +7,23 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
-    <script src="http://d3js.org/topojson.v0.min.js"></script>
-    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <link rel="icon" href="static/g12.png">
     <title>Instabrand</title>
 
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
     <!-- Bootstrap core CSS -->
-    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <link href="../static/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+    <link href="static/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="../static/css/starter-template.css" rel="stylesheet">
+    <link href="static/css/starter-template.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="../static/js/ie-emulation-modes-warning.js"></script>
+    <script src="static/js/ie-emulation-modes-warning.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -34,7 +33,6 @@
   </head>
 
   <body>
-
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -45,6 +43,10 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="/">Instabrand</a>
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/map">Map <span class="sr-only">(current)</span></a></li>
+            <li class="active"><a href="https://docs.google.com/presentation/d/1_6T9CydD0ujmAJIvhG2oS3Gj6tijtFMBRyDkpKwpI1w/pub?start=false&loop=false&delayms=3000">Presentation <span class="sr-only">(current)</span></a></li>
+          </ul>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
         </div><!--/.nav-collapse -->
@@ -59,40 +61,12 @@
       {% endblock %}
 
     </div><!-- /.container -->
-    <div id="map"></div>
-    <script type="text/javascript">
-     var width = 900;
-     var height = 600;
-
-     var projection = d3.geo.mercator();
-
-     var svg=d3.select("body")
-               .select("#map")
-               .append("svg")
-               .attr("width", width)
-               .attr("height", height);
-     var path = d3.geo.path()
-                  .projection(projection);
-     var g = svg.append("g");
-
-     d3.json("world-110m2.json", function(error, topology) {
-       g.selectAll("path")
-        .data(topojson.object(topology, topology.objects.countries)
-                      .geometries)
-        .enter()
-        .append("path")
-        .attr("d", path)
-     });
-    </script>
-
 
     <!-- Bootstrap core JavaScript
          ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="../static/js/jquery.min.js"><\/script>')</script>
-    <script src="../static/js/bootstrap.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="../static/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="static/js/ie10-viewport-bug-workaround.js"></script>
   </body>
 </html>

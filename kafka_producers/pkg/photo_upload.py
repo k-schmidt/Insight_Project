@@ -10,12 +10,12 @@ from typing import Deque, Dict, List, Tuple
 
 from kafka.producer import KeyedProducer
 
-from helper_functions import get_datetime
+from pkg.helper_functions import get_datetime
 
 
 def create_photo_producer(users: List[Tuple[str]],
                           photos: Deque[Tuple[str, str]],
-                          tags: List[Tuple[str]],
+                          tags: List[Tuple[str, str]],
                           locations: List[Tuple[str, str]],
                           producer: KeyedProducer) -> Dict[str, str]:
     """
