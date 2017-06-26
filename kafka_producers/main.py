@@ -97,7 +97,7 @@ def main(servers: List[str]) -> None:
     mysql_session = pymysql.connect(**MYSQL_CONF)
 
     users = query_for_users(mysql_session)
-    photos: Deque = deque([], maxlen=100)
+    photos: Deque = deque([], maxlen=3000)
     tags = query_for_tags(mysql_session)
     locations = query_for_locations(mysql_session)
 
