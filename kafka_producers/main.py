@@ -14,8 +14,8 @@ from kafka.client import SimpleClient
 from kafka.producer import KeyedProducer
 import pymysql
 
+from config_secure import SERVERS, MYSQL_CONF
 from pkg.comment import comment_producer
-from pkg.config_secure import SERVERS, MYSQL_CONF
 from pkg.create_user import create_user_producer  # pylint: disable=unused-import
 from pkg.follow import follow_producer
 from pkg.like import like_producer
