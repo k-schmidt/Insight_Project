@@ -14,7 +14,7 @@ This technology has the potential to connect people in new ways and provide mark
 ## Data
 The data for this project was completely fabricated since the Instagram API is rate limited.
 Therefore, I took inspiration from their schema design in order to create my own API contract.
-The pipiline is centered around six events:
+The pipeline is centered around six events:
 
 
 ### User Creation
