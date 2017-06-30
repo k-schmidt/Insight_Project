@@ -5,7 +5,7 @@ An Insight Data Engineering Fellowship personal project.
 
 
 ## Motivation
-Brands are all around us. Their messages are iconic. They are in the foods we eat and the clothes we wear.
+Brands are all around us. Their messages are iconic. They are the foods we eat and the clothes we wear.
 But brand recognition comes at a hefty price and until recently marketers had no way of definitively measuring their brand's reach.
 As someone with a background in marketing analytics who is curious about all the different use cases of image recognition, I believe there is a unique opportunity to use this new technology to tag brands contained in images of photos people upload to social media.
 This technology has the potential to connect people in new ways and provide marketers an accurate measurement of their brand's organic reach.
