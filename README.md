@@ -5,7 +5,7 @@ An Insight Data Engineering Fellowship personal project.
 
 
 ## Motivation
-Brands are all around us. Their messages are iconic. They are the foods we eat and the clothes we wear.
+Brands are all around us. Their messages are iconic. They are the food we eat and the clothes we wear.
 But brand recognition comes at a hefty price and until recently marketers had no way of definitively measuring their brand's reach.
 As someone with a background in marketing analytics who is curious about all the different use cases of image recognition, I believe there is a unique opportunity to use this new technology to tag brands contained in images of photos people upload to social media.
 This technology has the potential to connect people in new ways and provide marketers an accurate measurement of their brand's organic reach.
@@ -85,9 +85,9 @@ The pipiline is centered around six events:
 
 ## Tools
 This application is primarily a streaming exercise.
-Events are produced to [Kafka](https://kafka.apache.org/) and are consumed by [Spark Streaming](https://spark.apache.org/streaming/). However, we don't want to risk losing data so the stream is redundantly batch processed using [Secor](https://github.com/pinterest/secor) and loaded into [AWS S3](https://aws.amazon.com/s3/), partitioned by date in case this data needs to leverage a technology like Hive or Presto in the future.
+Events are produced to [Kafka](https://kafka.apache.org/) and are consumed by [Spark Streaming](https://spark.apache.org/streaming/). However, we don't want to risk losing data so the stream is redundantly batched using [Secor](https://github.com/pinterest/secor) and loaded into [AWS S3](https://aws.amazon.com/s3/), partitioned by date in case this data needs to leverage a technology like Hive or Presto in the future.
 Aggregations are performed in Spark as well as the logic ensuring a user's timeline is populated with the photos and updates of all the people they follow.
-The aggregations are then loaded into [MySQL](https://www.mysql.com/) while the raw events are publicized using [Cassandra](http://cassandra.apache.org/).
+The aggregations are then loaded into [MySQL](https://www.mysql.com/) while the events are constantly updating user timelines in [Cassandra](http://cassandra.apache.org/).
 
 ## Diagram
 ![Process Diagram](./Process_Diagram.jpg)
