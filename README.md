@@ -1,4 +1,4 @@
-# [Instabrand](http://instabrand.tech) - Measuring Organic Brand Reach through Social Media Photos
+# Instabrand - Measuring Organic Brand Reach through Social Media Photos
 By: <kyle.a.schmidt@gmail.com>
 
 An Insight Data Engineering Fellowship personal project.
